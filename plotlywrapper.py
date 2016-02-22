@@ -71,8 +71,18 @@ class _Plot(object):
 
 
 class Scatter(_Plot):
-    def __init__(self, x, y, label=None, **kargs):
-        data = [go.Scatter(x=x, y=y, name=label)]
+    def __init__(self, x=None, y=None, label=None, color=None, width=None, dash=None, **kargs):
+        line = {}
+        if color:
+            line['color'] = color
+        if width:
+            line['width'] = width
+        if dash:
+            line['dash'] = dash
+        if y is None:
+            y = x
+            x = np.arange(len(y))
+        data = [go.Scatter(x=x, y=y, name=label, line=line)]
         super(Scatter, self).__init__(data=data)
 
 
@@ -81,5 +91,3 @@ class Bar(_Plot):
         data = [go.Bar(x=x, y=y, name=label)]
         layout = {'barmode': 'group'}
         super(Bar, self).__init__(data=data, layout=layout)
-
-
