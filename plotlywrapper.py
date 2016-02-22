@@ -3,6 +3,8 @@ from tempfile import NamedTemporaryFile
 import plotly.offline as py
 import plotly.graph_objs as go
 
+import numpy as np
+
 from IPython import get_ipython
 from ipykernel import zmqshell
 
@@ -82,12 +84,19 @@ class Scatter(_Plot):
         if y is None:
             y = x
             x = np.arange(len(y))
+        x = np.atleast_1d(x)
+        y = np.atleast_1d(y)
         data = [go.Scatter(x=x, y=y, name=label, line=line)]
         super(Scatter, self).__init__(data=data)
 
 
 class Bar(_Plot):
-    def __init__(self, x, y, label=None, mode='group', **kargs):
+    def __init__(self, x=x, y=y, label=None, mode='group', **kargs):
+        if y is None:
+            y = x
+            x = np.arange(len(y))
+        x = np.atleast_1d(x)
+        y = np.atleast_1d(y)
         data = [go.Bar(x=x, y=y, name=label)]
         layout = {'barmode': 'group'}
         super(Bar, self).__init__(data=data, layout=layout)
