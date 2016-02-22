@@ -71,9 +71,10 @@ class _Chart(object):
             if filename is None:
                 filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
             kargs['filename'] = filename
+            kargs['auto_open'] = auto_open
 
         fig = go.Figure(data=self.data, layout=go.Layout(**self.layout))
-        plot(fig, show_link=show_link, auto_open=auto_open, **kargs)
+        plot(fig, show_link=show_link, **kargs)
 
 
 class Plot(_Chart):
