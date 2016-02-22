@@ -1,6 +1,6 @@
 """plotly wrapper to make easy plots easy to make"""
 
-__version__ = '0.0.1'
+__version__ = '0.0.2-dev'
 
 from tempfile import NamedTemporaryFile
 
