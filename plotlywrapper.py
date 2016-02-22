@@ -16,31 +16,44 @@ def detect_notebook():
     return isinstance(kernel, zmqshell.ZMQInteractiveShell)
 
 
-def _axis_label(axis, label):
-    return Plot(layout={axis: {'title': label}})
-
-
-def xlabel(label):
-    return _axis_label('xaxis', label)
-
-def ylabel(label):
-    return _axis_label('yaxis', label)
+def _merge_dicts(d1, d2):
+    d = d2.copy()
+    d.update(d1)
+    return d
 
 
 class Plot(object):
     def __init__(self, data=None, layout=None, **kargs):
         self.data = data
-        if data is None
+        if data is None:
             self.data = []
         self.layout = layout
-        if layout is None
+        if layout is None:
             self.layout = {}
 
     def __add__(self, other):
-        pass
+        self.data += other.data
+        self.layout = _merge_dicts(self.layout, other.layout)
+        return self
 
     def __radd__(self, other):
         return self.__add__(other)
+
+    def group(self):
+        self.layout['barmode'] = 'group'
+        return self
+
+    def stack(self):
+        self.layout['barmode'] = 'stack'
+        return self
+
+    def xlabel(self, label):
+        self.layout['xaxis'] = {'title': label}
+        return self
+
+    def ylabel(self, label):
+        self.layout['yaxis'] = {'title': label}
+        return self
 
     def show(self, filename=None):
         is_notebook = detect_notebook()
@@ -54,7 +67,7 @@ class Plot(object):
                 filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
             kargs['filename'] = filename
 
-        fig = go.Figure(data=self.data, layout=go.layout(**self.layout))
+        fig = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(fig, **kargs)
 
 
@@ -63,16 +76,11 @@ class Scatter(Plot):
         data = [go.Scatter(x=x, y=y, name=label)]
         super(Scatter, self).__init__(data=data)
 
+
 class Bar(Plot):
     def __init__(self, x, y, label=None, mode='group', **kargs):
         data = [go.Bar(x=x, y=y, name=label)]
-        layout = {barmode: 'group'}
+        layout = {'barmode': 'group'}
         super(Bar, self).__init__(data=data, layout=layout)
-
-    def group(self):
-        self.layout['barmode'] = 'group'
-
-    def stack(self):
-        self.layout['barmode'] = 'stack'
 
 
