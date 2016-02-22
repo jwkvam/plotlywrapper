@@ -11,7 +11,7 @@ def test_one():
 
     bars = pw.Bar(x=x, y=[20, 14, 23], label='new york')
     bars2 = pw.Bar(x=x, y=[12, 18, 29]) #, label='la')
-    line = pw.Plot(x=x, y=np.random.randn(3) * 20, label='hello', color='red', dash='dashdot', width=5)
+    line = pw.Line(x=x, y=np.random.randn(3) * 20, label='hello', color='red', dash='dashdot', width=5)
     plot = bars + bars2 + line
     # print(bars.data)
     plot.xlabel('x axis')
@@ -23,7 +23,7 @@ def test_one():
 def test_two():
     x = rng.randn(10)
 
-    line = pw.Plot(y=x, label='hello', color='red', dash='dashdot', width=5)
+    line = pw.Line(y=x, label='hello', color='red', dash='dashdot', width=5)
     # print(bars.data)
     line.xlabel('x axis')
     line.ylabel('y label')

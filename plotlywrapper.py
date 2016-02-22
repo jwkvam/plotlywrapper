@@ -87,7 +87,7 @@ class _Chart(object):
         plot(fig, show_link=show_link, **kargs)
 
 
-class Plot(_Chart):
+class Line(_Chart):
     def __init__(self, x=None, y=None, label=None, color=None, width=None, dash=None, **kargs):
         line = {}
         if color:
@@ -106,7 +106,7 @@ class Plot(_Chart):
             data = [go.Scatter(x=x, y=yy, name=label, line=line) for yy in y.T]
         else:
             data = [go.Scatter(x=x, y=y, name=label, line=line)]
-        super(Plot, self).__init__(data=data)
+        super(Line, self).__init__(data=data)
 
 
 class Bar(_Chart):
