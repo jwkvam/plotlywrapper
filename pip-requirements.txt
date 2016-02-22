@@ -1,4 +1,6 @@
+codecov
 plotly
 pylint
 pytest
+pytest-cov
 pytest-pylint
