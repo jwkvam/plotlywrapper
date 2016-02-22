@@ -1,3 +1,7 @@
+"""plotly wrapper to make easy plots easy to make"""
+
+__version__ = '0.0.1'
+
 from tempfile import NamedTemporaryFile
 
 import plotly.offline as py
@@ -23,7 +27,7 @@ def _merge_dicts(d1, d2):
     return d
 
 
-class _Plot(object):
+class _Chart(object):
     def __init__(self, data=None, layout=None, **kargs):
         self.data = data
         if data is None:
@@ -72,7 +76,7 @@ class _Plot(object):
         plot(fig, **kargs)
 
 
-class Scatter(_Plot):
+class Plot(_Chart):
     def __init__(self, x=None, y=None, label=None, color=None, width=None, dash=None, **kargs):
         line = {}
         if color:
@@ -81,19 +85,20 @@ class Scatter(_Plot):
             line['width'] = width
         if dash:
             line['dash'] = dash
-        if y is None:
-            y = x
+        if x is None:
             x = np.arange(len(y))
         x = np.atleast_1d(x)
         y = np.atleast_1d(y)
-        data = [go.Scatter(x=x, y=y, name=label, line=line)]
-        super(Scatter, self).__init__(data=data)
+        if y.ndim == 2:
+            data = [go.Scatter(x=x, y=yy, name=label, line=line) for yy in y.T]
+        else:
+            data = [go.Scatter(x=x, y=y, name=label, line=line)]
+        super(Plot, self).__init__(data=data)
 
 
-class Bar(_Plot):
+class Bar(_Chart):
     def __init__(self, x=None, y=None, label=None, mode='group', **kargs):
-        if y is None:
-            y = x
+        if x is None:
             x = np.arange(len(y))
         x = np.atleast_1d(x)
         y = np.atleast_1d(y)
