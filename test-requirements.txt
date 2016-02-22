@@ -1,0 +1,4 @@
+plotly
+pylint
+pytest
+pytest-pylint
