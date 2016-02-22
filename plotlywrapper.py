@@ -91,7 +91,7 @@ class Scatter(_Plot):
 
 
 class Bar(_Plot):
-    def __init__(self, x=x, y=y, label=None, mode='group', **kargs):
+    def __init__(self, x=None, y=None, label=None, mode='group', **kargs):
         if y is None:
             y = x
             x = np.arange(len(y))
