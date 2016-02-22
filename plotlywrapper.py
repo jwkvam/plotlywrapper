@@ -1,6 +1,6 @@
 """plotly wrapper to make easy plots easy to make"""
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 from tempfile import NamedTemporaryFile
 
@@ -25,6 +25,16 @@ def _merge_dicts(d1, d2):
     d = d2.copy()
     d.update(d1)
     return d
+
+def _try_pydatetime(x):
+    """Opportunistically try to convert to pandas time indexes
+    since plotly doesn't know how to handle them.
+    """
+    try:
+        x = x.to_pydatetime()
+    except AttributeError:
+        pass
+    return x
 
 
 class _Chart(object):
@@ -88,6 +98,8 @@ class Plot(_Chart):
             line['dash'] = dash
         if x is None:
             x = np.arange(len(y))
+        else:
+            x = _try_pydatetime(x)
         x = np.atleast_1d(x)
         y = np.atleast_1d(y)
         if y.ndim == 2:
@@ -101,6 +113,8 @@ class Bar(_Chart):
     def __init__(self, x=None, y=None, label=None, mode='group', **kargs):
         if x is None:
             x = np.arange(len(y))
+        else:
+            x = _try_pydatetime(x)
         x = np.atleast_1d(x)
         y = np.atleast_1d(y)
         data = [go.Bar(x=x, y=y, name=label)]
