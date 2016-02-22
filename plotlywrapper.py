@@ -60,7 +60,7 @@ class _Chart(object):
         self.layout['yaxis'] = {'title': label}
         return self
 
-    def show(self, filename=None):
+    def show(self, filename=None, show_link=True, auto_open=True):
         is_notebook = _detect_notebook()
         kargs = {}
         if is_notebook:
@@ -73,7 +73,7 @@ class _Chart(object):
             kargs['filename'] = filename
 
         fig = go.Figure(data=self.data, layout=go.Layout(**self.layout))
-        plot(fig, **kargs)
+        plot(fig, show_link=show_link, auto_open=auto_open, **kargs)
 
 
 class Plot(_Chart):
