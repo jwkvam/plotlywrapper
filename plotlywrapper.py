@@ -7,7 +7,7 @@ from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-def detect_notebook():
+def _detect_notebook():
     """
     this isn't 100% correct but seems good enough
     """
@@ -21,7 +21,7 @@ def _merge_dicts(d1, d2):
     return d
 
 
-class Plot(object):
+class _Plot(object):
     def __init__(self, data=None, layout=None, **kargs):
         self.data = data
         if data is None:
@@ -55,7 +55,7 @@ class Plot(object):
         return self
 
     def show(self, filename=None):
-        is_notebook = detect_notebook()
+        is_notebook = _detect_notebook()
         kargs = {}
         if is_notebook:
             py.init_notebook_mode()
@@ -70,13 +70,13 @@ class Plot(object):
         plot(fig, **kargs)
 
 
-class Scatter(Plot):
+class Scatter(_Plot):
     def __init__(self, x, y, label=None, **kargs):
         data = [go.Scatter(x=x, y=y, name=label)]
         super(Scatter, self).__init__(data=data)
 
 
-class Bar(Plot):
+class Bar(_Plot):
     def __init__(self, x, y, label=None, mode='group', **kargs):
         data = [go.Bar(x=x, y=y, name=label)]
         layout = {'barmode': 'group'}
