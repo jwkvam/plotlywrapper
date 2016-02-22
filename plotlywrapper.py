@@ -6,7 +6,6 @@ import plotly.graph_objs as go
 from IPython import get_ipython
 from ipykernel import zmqshell
 
-DEFAULT_NAME = 'plotly_figure'
 
 def detect_notebook():
     """
