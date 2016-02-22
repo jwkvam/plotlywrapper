@@ -8,3 +8,10 @@ plotlywrapper wraps [plotly](https://plot.ly/python/) to make easy plots easy to
 [![codecov.io](https://codecov.io/github/jwkvam/plotlywrapper/coverage.svg?branch=master)](https://codecov.io/github/jwkvam/plotlywrapper?branch=master)
 [![Code Health](https://landscape.io/github/jwkvam/plotlywrapper/master/landscape.svg?style=flat)](https://landscape.io/github/jwkvam/plotlywrapper/master)
 
+## Installation
+
+To install the latest release
+
+```
+pip install plotlywrapper
+```
