@@ -4,6 +4,7 @@
 from builtins import str
 
 import plotlywrapper as pw
+import pytest
 import numpy as np
 import pandas as pd
 from numpy import random as rng
@@ -24,6 +25,20 @@ def compare_figs(d1, d2):
                 compare_figs(v1, v2)
         else:
             assert d1[k] == d2[k]
+
+
+def test_assert_x_or_y():
+    x = np.arange(3)
+    with pytest.raises(AssertionError):
+        pw.line()
+    with pytest.raises(AssertionError):
+        pw.bar()
+
+
+def test_return_none():
+    x = np.arange(3)
+    ret = pw.line(x).show(auto_open=False)
+    assert ret is None
 
 
 def test_one():
