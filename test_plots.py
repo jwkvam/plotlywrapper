@@ -29,9 +29,9 @@ def compare_figs(d1, d2):
 def test_one():
     x = np.arange(3)
 
-    bars = pw.Bar(x=x, y=[20, 14, 23], label='new york')
-    bars2 = pw.Bar(x=x, y=[12, 18, 29]) #, label='la')
-    line = pw.Line(x=x, y=[3, 8, 9], label='hello', color='red', dash='dashdot', width=5)
+    bars = pw.bar(x=x, y=[20, 14, 23], label='new york')
+    bars2 = pw.bar(x=x, y=[12, 18, 29]) #, label='la')
+    line = pw.line(x=x, y=[3, 8, 9], label='hello', color='red', dash='dashdot', width=5)
     plot = bars + bars2 + line
     # print(bars.data)
     plot.xlabel('x axis')
@@ -58,12 +58,12 @@ def test_two():
 
     x = np.arange(10)
 
-    line = pw.Line(y=x, label='hello', color='red', dash='dashdot', width=5)
+    line = pw.line(y=x, label='hello', color='red', dash='dashdot', width=5)
     line.xlabel('x axis')
     line.ylabel('y label')
     fig = line.show(auto_open=False)
 
-    line = pw.Line(x, label='hello', color='red', dash='dashdot', width=5)
+    line = pw.line(x, label='hello', color='red', dash='dashdot', width=5)
     line.xlabel('x axis')
     line.ylabel('y label')
     fig = line.show(auto_open=False)
@@ -76,10 +76,10 @@ def test_dataframe_lines():
     y = rng.randn(10, 3)
     df = pd.DataFrame(y, x, columns)
 
-    p1 = pw.LineFrame(df)
+    p1 = pw.lineframe(df)
     fig1 = p1.show(auto_open=False)
 
-    p2 = pw.Line(x, y, columns)
+    p2 = pw.line(x, y, columns)
     fig2 = p2.show(auto_open=False)
 
     compare_figs(fig1, fig2)
@@ -90,10 +90,10 @@ def test_dataframe_bar():
     y = rng.randn(10, 3)
     df = pd.DataFrame(y, x, columns)
 
-    p1 = pw.BarFrame(df)
+    p1 = pw.barframe(df)
     fig1 = p1.show(auto_open=False)
 
-    p2 = pw.Bar(x, y, columns)
+    p2 = pw.bar(x, y, columns)
     fig2 = p2.show(auto_open=False)
 
     compare_figs(fig1, fig2)
