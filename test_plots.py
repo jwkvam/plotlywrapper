@@ -5,6 +5,7 @@ from builtins import str
 
 import plotlywrapper as pw
 import numpy as np
+import pandas as pd
 from numpy import random as rng
 
 def compare_figs(d1, d2):
@@ -53,13 +54,46 @@ def test_one():
 
 
 def test_two():
+    expect = {'layout': {'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}}, 'data': [{'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'}, 'type': 'scatter', 'name': 'hello'}]}
+
     x = np.arange(10)
 
     line = pw.Line(y=x, label='hello', color='red', dash='dashdot', width=5)
-    # print(bars.data)
     line.xlabel('x axis')
     line.ylabel('y label')
     fig = line.show(auto_open=False)
-    expect = {'layout': {'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}}, 'data': [{'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'}, 'type': 'scatter', 'name': 'hello'}]}
+
+    line = pw.Line(x, label='hello', color='red', dash='dashdot', width=5)
+    line.xlabel('x axis')
+    line.ylabel('y label')
+    fig = line.show(auto_open=False)
 
     compare_figs(fig, expect)
+
+def test_dataframe_lines():
+    columns = list('abc')
+    x = np.arange(10)
+    y = rng.randn(10, 3)
+    df = pd.DataFrame(y, x, columns)
+
+    p1 = pw.LineFrame(df)
+    fig1 = p1.show(auto_open=False)
+
+    p2 = pw.Line(x, y, columns)
+    fig2 = p2.show(auto_open=False)
+
+    compare_figs(fig1, fig2)
+
+def test_dataframe_bar():
+    columns = list('abc')
+    x = np.arange(10)
+    y = rng.randn(10, 3)
+    df = pd.DataFrame(y, x, columns)
+
+    p1 = pw.BarFrame(df)
+    fig1 = p1.show(auto_open=False)
+
+    p2 = pw.Bar(x, y, columns)
+    fig2 = p2.show(auto_open=False)
+
+    compare_figs(fig1, fig2)
