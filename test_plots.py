@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from builtins import str
+
 import plotlywrapper as pw
 import numpy as np
 from numpy import random as rng
@@ -12,6 +14,8 @@ def compare_figs(d1, d2):
         assert k in d2
         if isinstance(d1[k], dict):
             compare_figs(d1[k], d2[k])
+        elif isinstance(d1[k], str):
+            assert d1[k] == d2[k]
         elif isinstance(d1[k], np.ndarray):
             assert (d1[k] == d2[k]).all()
         elif hasattr(d1[k], '__iter__'):
