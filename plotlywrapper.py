@@ -1,8 +1,8 @@
 """plotly wrapper to make easy plots easy to make"""
 
-__version__ = '0.0.5-dev'
-
 from tempfile import NamedTemporaryFile
+
+from builtins import zip
 
 import plotly.offline as py
 import plotly.graph_objs as go
@@ -11,6 +11,16 @@ import numpy as np
 
 from IPython import get_ipython
 from ipykernel import zmqshell
+
+
+__version__ = '0.0.5-dev'
+
+
+def _labels(base='trace'):
+    i = 0
+    while True:
+        yield base + ' ' + str(i)
+        i += 1
 
 
 def _detect_notebook():
@@ -25,6 +35,7 @@ def _merge_dicts(d1, d2):
     d = d2.copy()
     d.update(d1)
     return d
+
 
 def _try_pydatetime(x):
     """Opportunistically try to convert to pandas time indexes
@@ -85,10 +96,12 @@ class _Chart(object):
 
         fig = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(fig, show_link=show_link, **kargs)
+        return fig
 
 
 class Line(_Chart):
     def __init__(self, x=None, y=None, label=None, color=None, width=None, dash=None, **kargs):
+        assert x is not None or y is not None, "x or y must be something"
         line = {}
         if color:
             line['color'] = color
@@ -96,6 +109,9 @@ class Line(_Chart):
             line['width'] = width
         if dash:
             line['dash'] = dash
+        if y is None:
+            y = x
+            x = None
         if x is None:
             x = np.arange(len(y))
         else:
@@ -103,20 +119,49 @@ class Line(_Chart):
         x = np.atleast_1d(x)
         y = np.atleast_1d(y)
         if y.ndim == 2:
-            data = [go.Scatter(x=x, y=yy, name=label, line=line) for yy in y.T]
+            if not hasattr(label, '__iter__'):
+                if label is None:
+                    label = _labels()
+                else:
+                    label = _labels(label)
+            data = [go.Scatter(x=x, y=yy, name=ll, line=line) for ll, yy in zip(label, y.T)]
         else:
             data = [go.Scatter(x=x, y=y, name=label, line=line)]
         super(Line, self).__init__(data=data)
 
 
+class LineFrame(Line):
+    def __init__(self, data, color=None, width=None, dash=None, **kargs):
+        super(LineFrame, self).__init__(x=data.index, y=data.values, label=data.columns,
+                                        color=color, width=width, dash=dash, **kargs)
+
+
 class Bar(_Chart):
     def __init__(self, x=None, y=None, label=None, mode='group', **kargs):
+        assert x is not None or y is not None, "x or y must be something"
+        if y is None:
+            y = x
+            x = None
         if x is None:
             x = np.arange(len(y))
         else:
             x = _try_pydatetime(x)
         x = np.atleast_1d(x)
         y = np.atleast_1d(y)
-        data = [go.Bar(x=x, y=y, name=label)]
-        layout = {'barmode': 'group'}
+        if y.ndim == 2:
+            if not hasattr(label, '__iter__'):
+                if label is None:
+                    label = _labels()
+                else:
+                    label = _labels(label)
+            data = [go.Bar(x=x, y=yy, name=ll) for ll, yy in zip(label, y.T)]
+        else:
+            data = [go.Bar(x=x, y=y, name=label)]
+        layout = {'barmode': mode}
         super(Bar, self).__init__(data=data, layout=layout)
+
+
+class BarFrame(Bar):
+    def __init__(self, data, mode='group', **kargs):
+        super(BarFrame, self).__init__(x=data.index, y=data.values, label=data.columns,
+                                       mode=mode, **kargs)

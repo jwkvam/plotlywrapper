@@ -15,3 +15,12 @@ To install the latest release
 ```
 pip install plotlywrapper
 ```
+
+## Testing
+
+To test run
+
+```
+make test
+```
+
