@@ -37,7 +37,7 @@ def test_one():
     plot.xlabel('x axis')
     plot.ylabel('y label')
     plot.stack()
-    fig = plot.show(auto_open=False)
+    plot.show(auto_open=False)
 
     expect = {'layout': {'barmode': 'stack', 'xaxis': {'title': 'x axis'},
                          'yaxis': {'title': 'y label'}},
@@ -50,7 +50,7 @@ def test_one():
                         'x': np.array([0, 1, 2]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter', 'name': 'hello'}]}
 
-    compare_figs(fig, expect)
+    compare_figs(plot.figure_, expect)
 
 
 def test_two():
@@ -66,9 +66,9 @@ def test_two():
     line = pw.line(x, label='hello', color='red', dash='dashdot', width=5)
     line.xlabel('x axis')
     line.ylabel('y label')
-    fig = line.show(auto_open=False)
+    line.show(auto_open=False)
 
-    compare_figs(fig, expect)
+    compare_figs(line.figure_, expect)
 
 def test_dataframe_lines():
     columns = list('abc')
@@ -77,12 +77,12 @@ def test_dataframe_lines():
     df = pd.DataFrame(y, x, columns)
 
     p1 = pw.lineframe(df)
-    fig1 = p1.show(auto_open=False)
+    p1.show(auto_open=False)
 
     p2 = pw.line(x, y, columns)
-    fig2 = p2.show(auto_open=False)
+    p2.show(auto_open=False)
 
-    compare_figs(fig1, fig2)
+    compare_figs(p1.figure_, p2.figure_)
 
 def test_dataframe_bar():
     columns = list('abc')
@@ -91,9 +91,9 @@ def test_dataframe_bar():
     df = pd.DataFrame(y, x, columns)
 
     p1 = pw.barframe(df)
-    fig1 = p1.show(auto_open=False)
+    p1.show(auto_open=False)
 
     p2 = pw.bar(x, y, columns)
-    fig2 = p2.show(auto_open=False)
+    p2.show(auto_open=False)
 
-    compare_figs(fig1, fig2)
+    compare_figs(p1.figure_, p2.figure_)

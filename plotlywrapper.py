@@ -13,7 +13,7 @@ from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-__version__ = '0.0.7-dev'
+__version__ = '0.0.7'
 
 
 def _labels(base='trace'):
@@ -94,9 +94,8 @@ class _Chart(object):
             kargs['filename'] = filename
             kargs['auto_open'] = auto_open
 
-        fig = go.Figure(data=self.data, layout=go.Layout(**self.layout))
-        plot(fig, show_link=show_link, **kargs)
-        return fig
+        self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
+        plot(self.figure_, show_link=show_link, **kargs)
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, **kargs):
