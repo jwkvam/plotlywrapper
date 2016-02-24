@@ -58,18 +58,29 @@ def test_one():
                          'yaxis': {'title': 'y label'}},
               'data': [{'y': np.array([20, 14, 23]),
                         'x': np.array([0, 1, 2]),
+                        'opacity': None,
                         'type': 'bar', 'name': 'new york'},
                        {'y': np.array([12, 18, 29]),
-                        'x': np.array([0, 1, 2]), 'type': 'bar', 'name': None},
+                        'x': np.array([0, 1, 2]), 'type': 'bar',
+                        'opacity': None,
+                        'name': None},
                        {'y': np.array([3, 8, 9]),
                         'x': np.array([0, 1, 2]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
-                        'type': 'scatter', 'name': 'hello'}]}
+                        'type': 'scatter',
+                        'opacity': None,
+                        'name': 'hello'}]}
 
     compare_figs(plot.figure_, expect)
 
 
 def test_two():
-    expect = {'layout': {'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}}, 'data': [{'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'}, 'type': 'scatter', 'name': 'hello'}]}
+    expect = {'layout': {'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}},
+              'data': [{'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
+                        'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
+                        'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
+                        'type': 'scatter',
+                        'opacity': None,
+                        'name': 'hello'}]}
 
     x = np.arange(10)
 

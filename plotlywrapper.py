@@ -106,7 +106,8 @@ class _Chart(object):
         plot(self.figure_, show_link=show_link, **kargs)
 
 
-def line(x=None, y=None, label=None, color=None, width=None, dash=None, **kargs):
+def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
+         **kargs):
     assert x is not None or y is not None, "x or y must be something"
     line = {}
     if color:
@@ -130,18 +131,20 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, **kargs)
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter(x=x, y=yy, name=ll, line=line) for ll, yy in zip(label, y.T)]
+        data = [go.Scatter(x=x, y=yy, name=ll, line=line, opacity=opacity)
+                for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Scatter(x=x, y=y, name=label, line=line)]
+        data = [go.Scatter(x=x, y=y, name=label, line=line, opacity=opacity)]
     return _Chart(data=data)
 
 
-def lineframe(data, color=None, width=None, dash=None, **kargs):
+def lineframe(data, color=None, width=None, dash=None, alpha=None,
+              opacity=None, **kargs):
     return line(x=data.index, y=data.values, label=data.columns,
-                color=color, width=width, dash=dash, **kargs)
+                color=color, width=width, dash=dash, opacity=opacity, **kargs)
 
 
-def bar(x=None, y=None, label=None, mode='group', **kargs):
+def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
     assert x is not None or y is not None, "x or y must be something"
     if y is None:
         y = x
@@ -158,13 +161,33 @@ def bar(x=None, y=None, label=None, mode='group', **kargs):
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Bar(x=x, y=yy, name=ll) for ll, yy in zip(label, y.T)]
+        data = [go.Bar(x=x, y=yy, name=ll, opacity=opacity) for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Bar(x=x, y=y, name=label)]
+        data = [go.Bar(x=x, y=y, name=label, opacity=opacity)]
     layout = {'barmode': mode}
     return _Chart(data=data, layout=layout)
 
 
-def barframe(data, mode='group', **kargs):
+def barframe(data, mode='group', opacity=None, **kargs):
     return bar(x=data.index, y=data.values, label=data.columns,
-               mode=mode, **kargs)
+               mode=mode, opacity=opacity, **kargs)
+
+def rug(x, label=None, opacity=None):
+    x = _try_pydatetime(x)
+    x = np.atleast_1d(x)
+    data = [go.Scatter(x=x, y=np.ones_like(x), name=label,
+                       opacity=opacity,
+                       mode='markers',
+                       marker=dict(symbol='line-ns-open'))]
+    layout = dict(barmode='overlay',
+                  hovermode='closest',
+                  legend=dict(traceorder='reversed'),
+                  xaxis1=dict(zeroline=False),
+                  yaxis1=dict(domain=[0.85, 1],
+                              showline=False,
+                              showgrid=False,
+                              zeroline=False,
+                              anchor='free',
+                              position=0.0,
+                              showticklabels=False))
+    return _Chart(data=data, layout=layout)
