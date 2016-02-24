@@ -81,6 +81,14 @@ class _Chart(object):
         self.layout['yaxis'] = {'title': label}
         return self
 
+    def xlim(self, low, high):
+        self.layout['xaxis'] = {'range': [low, high]}
+        return self
+
+    def ylim(self, low, high):
+        self.layout['yaxis'] = {'range': [low, high]}
+        return self
+
     def show(self, filename=None, show_link=True, auto_open=True):
         is_notebook = _detect_notebook()
         kargs = {}
