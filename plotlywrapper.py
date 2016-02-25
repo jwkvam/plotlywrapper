@@ -107,7 +107,7 @@ class _Chart(object):
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         **kargs):
+         mode='lines', **kargs):
     assert x is not None or y is not None, "x or y must be something"
     line = {}
     if color:
@@ -131,18 +131,27 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter(x=x, y=yy, name=ll, line=line, opacity=opacity)
+        data = [go.Scatter(x=x, y=yy, name=ll, line=line, mode=mode, opacity=opacity)
                 for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Scatter(x=x, y=y, name=label, line=line, opacity=opacity)]
+        data = [go.Scatter(x=x, y=y, name=label, line=line, mode=mode, opacity=opacity)]
     return _Chart(data=data)
 
 
 def lineframe(data, color=None, width=None, dash=None, alpha=None,
-              opacity=None, **kargs):
+              opacity=None, mode='lines', **kargs):
     return line(x=data.index, y=data.values, label=data.columns,
-                color=color, width=width, dash=dash, opacity=opacity, **kargs)
+                color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
+def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
+            mode='markers', **kargs):
+    return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
+                mode=mode, opacity=opacity, **kargs)
+
+def scatterframe(data, color=None, width=None, dash=None, alpha=None,
+                 opacity=None, mode='markers', **kargs):
+    return scatter(x=data.index, y=data.values, label=data.columns,
+                   color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
 def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
     assert x is not None or y is not None, "x or y must be something"

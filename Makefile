@@ -6,5 +6,8 @@ test:
 loop:
 	py.test --pylint --pylint-rcfile=pylintrc --pylint-error-types=EF -f
 
+debug:
+	py.test --pylint --pylint-rcfile=pylintrc --pylint-error-types=EF -s --pdb
+
 upload:
 	flit wheel --upload

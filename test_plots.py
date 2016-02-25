@@ -12,7 +12,8 @@ from numpy import random as rng
 def compare_figs(d1, d2):
     assert isinstance(d1, dict)
     assert isinstance(d2, dict)
-    for k in d1:
+    for k in set(d1.keys()).union(set(d2.keys())):
+        assert k in d1
         assert k in d2
         if isinstance(d1[k], dict):
             compare_figs(d1[k], d2[k])
@@ -67,6 +68,7 @@ def test_one():
                        {'y': np.array([3, 8, 9]),
                         'x': np.array([0, 1, 2]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter',
+                        'mode': 'lines',
                         'opacity': None,
                         'name': 'hello'}]}
 
@@ -79,6 +81,7 @@ def test_two():
                         'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
                         'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter',
+                        'mode': 'lines',
                         'opacity': None,
                         'name': 'hello'}]}
 
