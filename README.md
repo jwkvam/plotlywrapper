@@ -7,6 +7,7 @@ plotlywrapper wraps [plotly](https://plot.ly/python/) to make easy plots easy to
 [![PyPI](https://img.shields.io/pypi/dm/plotlywrapper.svg)](https://badge.fury.io/py/plotlywrapper)
 [![codecov.io](https://codecov.io/github/jwkvam/plotlywrapper/coverage.svg?branch=master)](https://codecov.io/github/jwkvam/plotlywrapper?branch=master)
 [![Code Health](https://landscape.io/github/jwkvam/plotlywrapper/master/landscape.svg?style=flat)](https://landscape.io/github/jwkvam/plotlywrapper/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jwkvam/plotlywrapper/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jwkvam/plotlywrapper/?branch=master)
 
 ## Installation
 
