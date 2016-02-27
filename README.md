@@ -16,6 +16,10 @@ To install the latest release
 pip install plotlywrapper
 ```
 
+## Demo
+
+This [notebook](http://nbviewer.jupyter.org/github/jwkvam/plotlywrapper/blob/master/demo.ipynb) shows off a portion of the API.
+
 ## Testing
 
 To test run
