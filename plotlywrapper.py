@@ -49,7 +49,8 @@ def _try_pydatetime(x):
 
 
 class _Chart(object):
-    def __init__(self, data=None, layout=None, **kargs):
+    def __init__(self, data=None, layout=None, repr_plot=True, **kargs):
+        self.repr_plot = repr_plot
         self.data = data
         if data is None:
             self.data = []
@@ -88,6 +89,11 @@ class _Chart(object):
     def ylim(self, low, high):
         self.layout['yaxis'] = {'range': [low, high]}
         return self
+
+    def __repr__(self):
+        if self.repr_plot:
+            self.show(filename=None, auto_open=False)
+        return super(_Chart, self).__repr__()
 
     def show(self, filename=None, show_link=True, auto_open=True):
         is_notebook = _detect_notebook()
