@@ -146,7 +146,7 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
     return _Chart(data=data)
 
 
-def lineframe(data, color=None, width=None, dash=None, alpha=None,
+def lineframe(data, color=None, width=None, dash=None,
               opacity=None, mode='lines', fill=None, **kargs):
     return line(x=data.index, y=data.values, label=data.columns,
                 color=color, width=width, dash=dash, opacity=opacity, mode=mode,
@@ -157,7 +157,7 @@ def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opaci
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
                 mode=mode, opacity=opacity, **kargs)
 
-def scatterframe(data, color=None, width=None, dash=None, alpha=None,
+def scatterframe(data, color=None, width=None, dash=None,
                  opacity=None, mode='markers', **kargs):
     return scatter(x=data.index, y=data.values, label=data.columns,
                    color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
