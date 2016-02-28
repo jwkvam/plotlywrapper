@@ -60,7 +60,8 @@ def test_one():
               'data': [{'y': np.array([20, 14, 23]),
                         'x': np.array([0, 1, 2]),
                         'opacity': None,
-                        'type': 'bar', 'name': 'new york'},
+                        'type': 'bar',
+                        'name': 'new york'},
                        {'y': np.array([12, 18, 29]),
                         'x': np.array([0, 1, 2]), 'type': 'bar',
                         'opacity': None,
@@ -68,6 +69,7 @@ def test_one():
                        {'y': np.array([3, 8, 9]),
                         'x': np.array([0, 1, 2]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter',
+                        'fill': None,
                         'mode': 'lines',
                         'opacity': None,
                         'name': 'hello'}]}
@@ -81,6 +83,7 @@ def test_two():
                         'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
                         'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter',
+                        'fill': None,
                         'mode': 'lines',
                         'opacity': None,
                         'name': 'hello'}]}

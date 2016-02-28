@@ -113,7 +113,7 @@ class _Chart(object):
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         mode='lines', **kargs):
+         mode='lines', fill=None, **kargs):
     assert x is not None or y is not None, "x or y must be something"
     line = {}
     if color:
@@ -137,17 +137,20 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter(x=x, y=yy, name=ll, line=line, mode=mode, opacity=opacity)
+        data = [go.Scatter(x=x, y=yy, name=ll, line=line, mode=mode,
+                           fill=fill, opacity=opacity)
                 for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Scatter(x=x, y=y, name=label, line=line, mode=mode, opacity=opacity)]
+        data = [go.Scatter(x=x, y=y, name=label, line=line, mode=mode,
+                           fill=fill, opacity=opacity)]
     return _Chart(data=data)
 
 
 def lineframe(data, color=None, width=None, dash=None, alpha=None,
-              opacity=None, mode='lines', **kargs):
+              opacity=None, mode='lines', fill=None, **kargs):
     return line(x=data.index, y=data.values, label=data.columns,
-                color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
+                color=color, width=width, dash=dash, opacity=opacity, mode=mode,
+                fill=fill, **kargs)
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
             mode='markers', **kargs):
@@ -186,6 +189,22 @@ def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
 def barframe(data, mode='group', opacity=None, **kargs):
     return bar(x=data.index, y=data.values, label=data.columns,
                mode=mode, opacity=opacity, **kargs)
+
+
+def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
+              mode='lines', **kargs):
+    return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
+                opacity=opacity, mode=mode, fill='tozeroy', **kargs)
+
+
+def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=None, dash=None, opacity=None,
+              mode='lines', **kargs):
+    plot = line(x=x, y=ylow, label=label, color=color, width=width, dash=dash,
+                opacity=opacity, mode=mode, fill=None, **kargs)
+    plot += line(x=x, y=yhigh, label=label, color=color, width=width, dash=dash,
+                opacity=opacity, mode=mode, fill='tonexty', **kargs)
+    return plot
+
 
 def rug(x, label=None, opacity=None):
     x = _try_pydatetime(x)
