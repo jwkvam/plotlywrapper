@@ -31,10 +31,10 @@ def _detect_notebook():
     return isinstance(kernel, zmqshell.ZMQInteractiveShell)
 
 
-def _merge_dicts(d1, d2):
-    d = d2.copy()
-    d.update(d1)
-    return d
+def _merge_dicts(x, y):
+    z = y.copy()
+    z.update(x)
+    return z
 
 
 def _try_pydatetime(x):
@@ -115,13 +115,13 @@ class _Chart(object):
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
          mode='lines', fill=None, **kargs):
     assert x is not None or y is not None, "x or y must be something"
-    line = {}
+    lineattr = {}
     if color:
-        line['color'] = color
+        lineattr['color'] = color
     if width:
-        line['width'] = width
+        lineattr['width'] = width
     if dash:
-        line['dash'] = dash
+        lineattr['dash'] = dash
     if y is None:
         y = x
         x = None
@@ -137,11 +137,11 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter(x=x, y=yy, name=ll, line=line, mode=mode,
+        data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode,
                            fill=fill, opacity=opacity)
                 for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Scatter(x=x, y=y, name=label, line=line, mode=mode,
+        data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode,
                            fill=fill, opacity=opacity)]
     return _Chart(data=data)
 
@@ -197,12 +197,12 @@ def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opa
                 opacity=opacity, mode=mode, fill='tozeroy', **kargs)
 
 
-def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=None, dash=None, opacity=None,
-              mode='lines', **kargs):
+def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=None, dash=None,
+                 opacity=None, mode='lines', **kargs):
     plot = line(x=x, y=ylow, label=label, color=color, width=width, dash=dash,
                 opacity=opacity, mode=mode, fill=None, **kargs)
     plot += line(x=x, y=yhigh, label=label, color=color, width=width, dash=dash,
-                opacity=opacity, mode=mode, fill='tonexty', **kargs)
+                 opacity=opacity, mode=mode, fill='tonexty', **kargs)
     return plot
 
 
