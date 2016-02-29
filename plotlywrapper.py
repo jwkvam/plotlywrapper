@@ -225,3 +225,8 @@ def rug(x, label=None, opacity=None):
                               position=0.0,
                               showticklabels=False))
     return _Chart(data=data, layout=layout)
+
+
+def surface(x, y, z):
+    data = [go.Surface(x=x, y=y, z=z)]
+    return _Chart(data=data)
