@@ -176,22 +176,25 @@ def lineframe(data, color=None, width=None, dash=None,
                 color=color, width=width, dash=dash, opacity=opacity, mode=mode,
                 fill=fill, **kargs)
 
+
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
             mode='markers', **kargs):
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
                 mode=mode, opacity=opacity, **kargs)
+
 
 def scatterframe(data, color=None, width=None, dash=None,
                  opacity=None, mode='markers', **kargs):
     return scatter(x=data.index, y=data.values, label=data.columns,
                    color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
+
 def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
     """Create a bar chart
 
     Parameters
     ----------
-    x : TODO, optional
+    x : array-like, optional
     y : TODO, optional
     label : TODO, optional
     mode : 'group' or 'stack', default 'group'
