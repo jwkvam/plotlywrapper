@@ -187,6 +187,21 @@ def scatterframe(data, color=None, width=None, dash=None,
                    color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
 def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
+    """Create a bar chart
+
+    Parameters
+    ----------
+    x : TODO, optional
+    y : TODO, optional
+    label : TODO, optional
+    mode : 'group' or 'stack', default 'group'
+    opacity : TODO, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     assert x is not None or y is not None, "x or y must be something"
     if y is None:
         y = x
@@ -254,3 +269,13 @@ def rug(x, label=None, opacity=None):
 def surface(x, y, z):
     data = [go.Surface(x=x, y=y, z=z)]
     return _Chart(data=data)
+
+
+def hist(x, mode='overlay', opacity=None, horz=False):
+    if horz:
+        kargs = dict(y=x)
+    else:
+        kargs = dict(x=x)
+    layout = dict(barmode=mode)
+    data = [go.Histogram(opacity=opacity, **kargs)]
+    return _Chart(data=data, layout=layout)
