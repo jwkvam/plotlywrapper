@@ -149,12 +149,18 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
 
 def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
            mode='lines', **kargs):
-    lineattr = {}
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     z = np.atleast_1d(z)
     assert x.shape == y.shape
     assert y.shape == z.shape
+    lineattr = {}
+    if color:
+        lineattr['color'] = color
+    if width:
+        lineattr['width'] = width
+    if dash:
+        lineattr['dash'] = dash
     if y.ndim == 2:
         if not hasattr(label, '__iter__'):
             if label is None:
