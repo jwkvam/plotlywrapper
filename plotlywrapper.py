@@ -1,5 +1,6 @@
 """plotly wrapper to make easy plots easy to make"""
 
+import os
 from tempfile import NamedTemporaryFile
 
 # pylint: disable=redefined-builtin
@@ -14,7 +15,7 @@ from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-__version__ = '0.0.13-dev'
+__version__ = '0.0.13'
 
 
 def _labels(base='trace'):
@@ -111,6 +112,13 @@ class _Chart(object):
 
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(self.figure_, show_link=show_link, **kargs)
+
+    def save(self, filename=None, show_link=True, auto_open=False):
+        if filename is None:
+            filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
+        self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
+        py.plot(self.figure_, show_link=show_link, filename=filename, auto_open=auto_open)
+        return filename
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
