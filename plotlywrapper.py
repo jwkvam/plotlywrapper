@@ -15,7 +15,7 @@ from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-__version__ = '0.0.13'
+__version__ = '0.0.14-dev'
 
 
 def _labels(base='trace'):
