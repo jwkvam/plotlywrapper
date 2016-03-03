@@ -33,8 +33,10 @@ def _detect_notebook():
     return isinstance(kernel, zmqshell.ZMQInteractiveShell)
 
 
-def _merge_dicts(x, y):
+def _merge_layout(x, y):
     z = y.copy()
+    if 'shapes' in z and 'shapes' in x:
+        x['shapes'] += z['shapes']
     z.update(x)
     return z
 
@@ -62,7 +64,7 @@ class _Chart(object):
 
     def __add__(self, other):
         self.data += other.data
-        self.layout = _merge_dicts(self.layout, other.layout)
+        self.layout = _merge_layout(self.layout, other.layout)
         return self
 
     def __radd__(self, other):
@@ -119,6 +121,41 @@ class _Chart(object):
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         py.plot(self.figure_, show_link=show_link, filename=filename, auto_open=auto_open)
         return filename
+
+
+def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None):
+    """Draws a vertical line"""
+    lineattr = {}
+    if color:
+        lineattr['color'] = color
+    if width:
+        lineattr['width'] = width
+    if dash:
+        lineattr['dash'] = dash
+
+    layout = dict(shapes=[dict(type='line',
+                               x0=x, x1=x,
+                               y0=ymin, y1=ymax,
+                               line=lineattr)])
+    return _Chart(layout=layout)
+
+
+def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=None):
+    """Draws a horizontal line"""
+    lineattr = {}
+    if color:
+        lineattr['color'] = color
+    if width:
+        lineattr['width'] = width
+    if dash:
+        lineattr['dash'] = dash
+
+    layout = dict(shapes=[dict(type='line',
+                               x0=xmin, x1=xmax,
+                               y0=y, y1=y,
+                               line=lineattr)])
+    return _Chart(layout=layout)
+
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
