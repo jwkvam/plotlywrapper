@@ -157,7 +157,6 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
     return _Chart(layout=layout)
 
 
-
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
          mode='lines', fill=None, **kargs):
     assert x is not None or y is not None, "x or y must be something"
