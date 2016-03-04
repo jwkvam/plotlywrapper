@@ -176,6 +176,7 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
         x = _try_pydatetime(x)
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
+    assert x.shape[0] == y.shape[0]
     if y.ndim == 2:
         if not hasattr(label, '__iter__'):
             if label is None:
