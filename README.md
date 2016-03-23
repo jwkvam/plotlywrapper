@@ -33,7 +33,7 @@ plotly.offline.plot({
 ### Plotlywrapper
 ``` python
 import plotlywrapper as pw
-plot = pw.scatter(x=[1, 2, 3, 4], y=[4, 1, 3, 7])
+plot = pw.line(x=[1, 2, 3, 4], y=[4, 1, 3, 7])
 plot.title('hello world')
 plot.show()
 ```
