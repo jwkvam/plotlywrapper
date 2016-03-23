@@ -11,7 +11,7 @@ plotlywrapper wraps [plotly](https://plot.ly/python/) to make easy plots easy to
 
 ## Motivation
 
-To understand why I made this project compare the following code which generate the same plot.
+To understand why I made this project compare the following code snippets which generate the same plot.
 
 ### Plotly
 
