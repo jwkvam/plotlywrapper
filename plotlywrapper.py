@@ -328,24 +328,28 @@ def hist(x, mode='overlay', opacity=None, horz=False):
     return _Chart(data=data, layout=layout)
 
 
-class _DataFramePlotting(object):
+class _PandasPlotting(object):
 
     def __init__(self, data):
         self._data = data
+        if isinstance(data, pd.DataFrame):
+            self._label = data.columns
+        elif isinstance(data, pd.Series):
+            self._label = data.name
 
     def line(self, color=None, width=None, dash=None,
              opacity=None, mode='lines+markers', fill=None, **kargs):
-        return line(x=self._data.index, y=self._data.values, label=self._data.columns,
+        return line(x=self._data.index, y=self._data.values, label=self._label,
                     color=color, width=width, dash=dash, opacity=opacity, mode=mode,
                     fill=fill, **kargs)
 
     def scatter(self, color=None, width=None, dash=None,
                      opacity=None, mode='markers', **kargs):
-        return scatter(x=self._data.index, y=self._data.values, label=self._data.columns,
+        return scatter(x=self._data.index, y=self._data.values, label=self._label,
                        color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
     def bar(self, mode='group', opacity=None, **kargs):
-        return bar(x=self._data.index, y=self._data.values, label=self._data.columns,
+        return bar(x=self._data.index, y=self._data.values, label=self._label,
                    mode=mode, opacity=opacity, **kargs)
 
 
@@ -371,4 +375,5 @@ class _AccessorProperty(object):
         raise AttributeError("can't delete attribute")
 
 
-pd.DataFrame.plotly = _AccessorProperty(_DataFramePlotting, _DataFramePlotting)
+pd.DataFrame.plotly = _AccessorProperty(_PandasPlotting, _PandasPlotting)
+pd.Series.plotly = _AccessorProperty(_PandasPlotting, _PandasPlotting)
