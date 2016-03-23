@@ -70,7 +70,7 @@ def test_one():
                         'x': np.array([0, 1, 2]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter',
                         'fill': None,
-                        'mode': 'lines',
+                        'mode': 'lines+markers',
                         'opacity': None,
                         'name': 'hello'}]}
 
@@ -84,7 +84,7 @@ def test_two():
                         'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter',
                         'fill': None,
-                        'mode': 'lines',
+                        'mode': 'lines+markers',
                         'opacity': None,
                         'name': 'hello'}]}
 
@@ -108,7 +108,7 @@ def test_dataframe_lines():
     y = rng.randn(10, 3)
     df = pd.DataFrame(y, x, columns)
 
-    p1 = pw.lineframe(df)
+    p1 = df.plotly.line()
     p1.show(auto_open=False)
 
     p2 = pw.line(x, y, columns)
@@ -122,7 +122,7 @@ def test_dataframe_bar():
     y = rng.randn(10, 3)
     df = pd.DataFrame(y, x, columns)
 
-    p1 = pw.barframe(df)
+    p1 = df.plotly.bar()
     p1.show(auto_open=False)
 
     p2 = pw.bar(x, y, columns)

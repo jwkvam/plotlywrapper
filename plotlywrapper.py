@@ -10,12 +10,13 @@ import plotly.offline as py
 import plotly.graph_objs as go
 
 import numpy as np
+import pandas as pd
 
 from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-__version__ = '0.0.14'
+__version__ = '0.0.15-dev'
 
 
 def _labels(base='trace'):
@@ -94,6 +95,10 @@ class _Chart(object):
         self.layout['yaxis'] = {'range': [low, high]}
         return self
 
+    def title(self, string):
+        self.layout['title'] = string
+        return self
+
     def __repr__(self):
         if self.repr_plot:
             self.show(filename=None, auto_open=False)
@@ -158,7 +163,7 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         mode='lines', fill=None, **kargs):
+         mode='lines+markers', fill=None, **kargs):
     assert x is not None or y is not None, "x or y must be something"
     lineattr = {}
     if color:
@@ -193,7 +198,7 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
 
 
 def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
-           mode='lines', **kargs):
+           mode='lines+markers', **kargs):
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     z = np.atleast_1d(z)
@@ -221,11 +226,6 @@ def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
     return _Chart(data=data)
 
 
-def lineframe(data, color=None, width=None, dash=None,
-              opacity=None, mode='lines', fill=None, **kargs):
-    return line(x=data.index, y=data.values, label=data.columns,
-                color=color, width=width, dash=dash, opacity=opacity, mode=mode,
-                fill=fill, **kargs)
 
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
@@ -234,10 +234,6 @@ def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opaci
                 mode=mode, opacity=opacity, **kargs)
 
 
-def scatterframe(data, color=None, width=None, dash=None,
-                 opacity=None, mode='markers', **kargs):
-    return scatter(x=data.index, y=data.values, label=data.columns,
-                   color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
 
 def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
@@ -279,19 +275,16 @@ def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
     return _Chart(data=data, layout=layout)
 
 
-def barframe(data, mode='group', opacity=None, **kargs):
-    return bar(x=data.index, y=data.values, label=data.columns,
-               mode=mode, opacity=opacity, **kargs)
 
 
 def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-              mode='lines', **kargs):
+              mode='lines+markers', **kargs):
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
                 opacity=opacity, mode=mode, fill='tozeroy', **kargs)
 
 
 def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=None, dash=None,
-                 opacity=None, mode='lines', **kargs):
+                 opacity=None, mode='lines+markers', **kargs):
     plot = line(x=x, y=ylow, label=label, color=color, width=width, dash=dash,
                 opacity=opacity, mode=mode, fill=None, **kargs)
     plot += line(x=x, y=yhigh, label=label, color=color, width=width, dash=dash,
@@ -333,3 +326,49 @@ def hist(x, mode='overlay', opacity=None, horz=False):
     layout = dict(barmode=mode)
     data = [go.Histogram(opacity=opacity, **kargs)]
     return _Chart(data=data, layout=layout)
+
+
+class _DataFramePlotting(object):
+
+    def __init__(self, data):
+        self._data = data
+
+    def line(self, color=None, width=None, dash=None,
+             opacity=None, mode='lines+markers', fill=None, **kargs):
+        return line(x=self._data.index, y=self._data.values, label=self._data.columns,
+                    color=color, width=width, dash=dash, opacity=opacity, mode=mode,
+                    fill=fill, **kargs)
+
+    def scatter(self, color=None, width=None, dash=None,
+                     opacity=None, mode='markers', **kargs):
+        return scatter(x=self._data.index, y=self._data.values, label=self._data.columns,
+                       color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
+
+    def bar(self, mode='group', opacity=None, **kargs):
+        return bar(x=self._data.index, y=self._data.values, label=self._data.columns,
+                   mode=mode, opacity=opacity, **kargs)
+
+
+# pylint: disable=too-few-public-methods
+class _AccessorProperty(object):
+    """Descriptor for implementing accessor properties like Series.str
+    """
+    def __init__(self, accessor_cls, construct_accessor):
+        self.accessor_cls = accessor_cls
+        self.construct_accessor = construct_accessor
+        self.__doc__ = accessor_cls.__doc__
+
+    def __get__(self, instance, owner=None):
+        if instance is None:
+            # this ensures that Series.str.<method> is well defined
+            return self.accessor_cls
+        return self.construct_accessor(instance)
+
+    def __set__(self, instance, value):
+        raise AttributeError("can't set attribute")
+
+    def __delete__(self, instance):
+        raise AttributeError("can't delete attribute")
+
+
+pd.DataFrame.plotly = _AccessorProperty(_DataFramePlotting, _DataFramePlotting)
