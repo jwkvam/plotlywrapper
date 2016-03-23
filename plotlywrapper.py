@@ -226,14 +226,10 @@ def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
     return _Chart(data=data)
 
 
-
-
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
             mode='markers', **kargs):
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
                 mode=mode, opacity=opacity, **kargs)
-
-
 
 
 def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
@@ -273,8 +269,6 @@ def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
         data = [go.Bar(x=x, y=y, name=label, opacity=opacity)]
     layout = {'barmode': mode}
     return _Chart(data=data, layout=layout)
-
-
 
 
 def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
@@ -355,7 +349,8 @@ class _PandasPlotting(object):
 
 # pylint: disable=too-few-public-methods
 class _AccessorProperty(object):
-    """Descriptor for implementing accessor properties like Series.str
+    """Descriptor for implementing accessor properties.
+    Borrowed from pandas.
     """
     def __init__(self, accessor_cls, construct_accessor):
         self.accessor_cls = accessor_cls
