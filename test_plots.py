@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# pylint: disable=redefined-builtin
 from builtins import str
 
-import plotlywrapper as pw
-import pytest
 import numpy as np
-import pandas as pd
 from numpy import random as rng
+import pandas as pd
+import pytest
+
+import plotlywrapper as pw
+
 
 def compare_figs(d1, d2):
     assert isinstance(d1, dict)
@@ -28,8 +31,7 @@ def compare_figs(d1, d2):
             assert d1[k] == d2[k]
 
 
-def test_assert_x_or_y():
-    x = np.arange(3)
+def test_no_args():
     with pytest.raises(AssertionError):
         pw.line()
     with pytest.raises(AssertionError):
@@ -67,7 +69,8 @@ def test_one():
                         'opacity': None,
                         'name': None},
                        {'y': np.array([3, 8, 9]),
-                        'x': np.array([0, 1, 2]), 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
+                        'x': np.array([0, 1, 2]),
+                        'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'type': 'scatter',
                         'fill': None,
                         'mode': 'lines+markers',
@@ -90,17 +93,18 @@ def test_two():
 
     x = np.arange(10)
 
-    line = pw.line(y=x, label='hello', color='red', dash='dashdot', width=5)
-    line.xlabel('x axis')
-    line.ylabel('y label')
-    fig = line.show(auto_open=False)
+    line0 = pw.line(y=x, label='hello', color='red', dash='dashdot', width=5)
+    line0.xlabel('x axis')
+    line0.ylabel('y label')
+    line0.show(auto_open=False)
 
-    line = pw.line(x, label='hello', color='red', dash='dashdot', width=5)
-    line.xlabel('x axis')
-    line.ylabel('y label')
-    line.show(auto_open=False)
+    line1 = pw.line(x, label='hello', color='red', dash='dashdot', width=5)
+    line1.xlabel('x axis')
+    line1.ylabel('y label')
+    line1.show(auto_open=False)
 
-    compare_figs(line.figure_, expect)
+    compare_figs(line0.figure_, line1.figure_)
+    compare_figs(line0.figure_, expect)
 
 def test_dataframe_lines():
     columns = list('abc')

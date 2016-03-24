@@ -59,7 +59,8 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=no-member
+# TODO remove missing-docstring
+disable=no-member,missing-docstring
 # disable=metaclass-assignment,using-cmp-argument,execfile-builtin,standarderror-builtin,buffer-builtin,delslice-method,hex-method,dict-view-method,unicode-builtin,basestring-builtin,coerce-builtin,filter-builtin-not-iterating,old-ne-operator,reload-builtin,setslice-method,raising-string,backtick,round-builtin,next-method-called,raw_input-builtin,apply-builtin,reduce-builtin,coerce-method,long-suffix,parameter-unpacking,getslice-method,oct-method,map-builtin-not-iterating,input-builtin,no-absolute-import,nonzero-method,dict-iter-method,file-builtin,long-builtin,xrange-builtin,cmp-builtin,old-raise-syntax,useless-suppression,print-statement,indexing-exception,old-division,suppressed-message,range-builtin-not-iterating,intern-builtin,import-star-module-level,old-octal-literal,cmp-method,zip-builtin-not-iterating,unichr-builtin,unpacking-in-except
 
 
@@ -115,16 +116,16 @@ method-rgx=[a-z_][a-z0-9_]{2,30}$
 method-name-hint=[a-z_][a-z0-9_]{2,30}$
 
 # Regular expression matching correct argument names
-argument-rgx=[a-z_][a-z0-9_]{2,30}$
+argument-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Naming hint for argument names
-argument-name-hint=[a-z_][a-z0-9_]{2,30}$
+argument-name-hint=[a-z_][a-z0-9_]{1,30}$
 
 # Regular expression matching correct variable names
-variable-rgx=[a-z_][a-z0-9_]{2,30}$
+variable-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Naming hint for variable names
-variable-name-hint=[a-z_][a-z0-9_]{2,30}$
+variable-name-hint=[a-z_][a-z0-9_]{1,30}$
 
 # Regular expression matching correct class attribute names
 class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$

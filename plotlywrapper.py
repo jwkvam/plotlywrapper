@@ -1,6 +1,5 @@
 """plotly wrapper to make easy plots easy to make"""
 
-import os
 from tempfile import NamedTemporaryFile
 
 # pylint: disable=redefined-builtin
@@ -54,7 +53,7 @@ def _try_pydatetime(x):
 
 
 class _Chart(object):
-    def __init__(self, data=None, layout=None, repr_plot=True, **kargs):
+    def __init__(self, data=None, layout=None, repr_plot=True):
         self.repr_plot = repr_plot
         self.data = data
         if data is None:
@@ -62,6 +61,7 @@ class _Chart(object):
         self.layout = layout
         if layout is None:
             self.layout = {}
+        self.figure_ = None
 
     def __add__(self, other):
         self.data += other.data
@@ -141,6 +141,7 @@ def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None)
     layout = dict(shapes=[dict(type='line',
                                x0=x, x1=x,
                                y0=ymin, y1=ymax,
+                               opacity=opacity,
                                line=lineattr)])
     return _Chart(layout=layout)
 
@@ -158,12 +159,13 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
     layout = dict(shapes=[dict(type='line',
                                x0=xmin, x1=xmax,
                                y0=y, y1=y,
+                               opacity=opacity,
                                line=lineattr)])
     return _Chart(layout=layout)
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         mode='lines+markers', fill=None, **kargs):
+         mode='lines+markers', fill=None):
     assert x is not None or y is not None, "x or y must be something"
     lineattr = {}
     if color:
@@ -198,7 +200,7 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
 
 
 def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
-           mode='lines+markers', **kargs):
+           mode='lines+markers'):
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     z = np.atleast_1d(z)
@@ -227,12 +229,12 @@ def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
 
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-            mode='markers', **kargs):
+            mode='markers'):
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
-                mode=mode, opacity=opacity, **kargs)
+                mode=mode, opacity=opacity)
 
 
-def bar(x=None, y=None, label=None, mode='group', opacity=None, **kargs):
+def bar(x=None, y=None, label=None, mode='group', opacity=None):
     """Create a bar chart
 
     Parameters
@@ -338,7 +340,7 @@ class _PandasPlotting(object):
                     fill=fill, **kargs)
 
     def scatter(self, color=None, width=None, dash=None,
-                     opacity=None, mode='markers', **kargs):
+                opacity=None, mode='markers', **kargs):
         return scatter(x=self._data.index, y=self._data.values, label=self._label,
                        color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
