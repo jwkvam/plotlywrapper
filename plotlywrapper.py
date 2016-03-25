@@ -15,7 +15,7 @@ from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-__version__ = '0.0.17-dev'
+__version__ = '0.0.17'
 
 
 def _labels(base='trace'):
@@ -126,6 +126,9 @@ class _Chart(object):
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         py.plot(self.figure_, show_link=show_link, filename=filename, auto_open=auto_open)
         return filename
+
+    def to_json(self):
+        return dict(data=self.data, layout=self.layout)
 
 
 def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None):

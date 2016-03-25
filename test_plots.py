@@ -44,6 +44,22 @@ def test_return_none():
     assert ret is None
 
 
+def test_tojson():
+    js = pw.line(range(3)).to_json()
+    # print(js)
+    # assert set(js.keys()) == set(['data', 'layout'])
+    expected = {'layout': {},
+                'data': [{'opacity': None,
+                          'name': None,
+                          'mode': 'lines+markers',
+                          'y': np.array([0, 1, 2]),
+                          'x': np.array([0, 1, 2]),
+                          'line': {},
+                          'type': 'scatter',
+                          'fill': None}]}
+    compare_figs(js, expected)
+
+
 def test_one():
     x = np.arange(3)
 
