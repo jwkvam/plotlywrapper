@@ -131,7 +131,7 @@ class _Chart(object):
         listdata = []
         for data in self.data:
             td = {}
-            for k, v in data.iteritems():
+            for k, v in data.items():
                 try:
                     td[k] = v.tolist()
                 except (AttributeError, TypeError):
