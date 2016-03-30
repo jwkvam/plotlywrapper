@@ -128,7 +128,16 @@ class _Chart(object):
         return filename
 
     def to_json(self):
-        return dict(data=self.data, layout=self.layout)
+        listdata = []
+        for data in self.data:
+            td = {}
+            for k, v in data.iteritems():
+                try:
+                    td[k] = v.tolist()
+                except (AttributeError, TypeError):
+                    td[k] = v
+            listdata.append(td)
+        return dict(data=listdata, layout=self.layout)
 
 
 def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None):
@@ -336,19 +345,25 @@ class _PandasPlotting(object):
         elif isinstance(data, pd.Series):
             self._label = data.name
 
-    def line(self, color=None, width=None, dash=None,
+    def line(self, label=None, color=None, width=None, dash=None,
              opacity=None, mode='lines+markers', fill=None, **kargs):
-        return line(x=self._data.index, y=self._data.values, label=self._label,
+        if label is None:
+            label = self._label
+        return line(x=self._data.index, y=self._data.values, label=label,
                     color=color, width=width, dash=dash, opacity=opacity, mode=mode,
                     fill=fill, **kargs)
 
-    def scatter(self, color=None, width=None, dash=None,
+    def scatter(self, label=None, color=None, width=None, dash=None,
                 opacity=None, mode='markers', **kargs):
-        return scatter(x=self._data.index, y=self._data.values, label=self._label,
+        if label is None:
+            label = self._label
+        return scatter(x=self._data.index, y=self._data.values, label=label,
                        color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
-    def bar(self, mode='group', opacity=None, **kargs):
-        return bar(x=self._data.index, y=self._data.values, label=self._label,
+    def bar(self, label=None, mode='group', opacity=None, **kargs):
+        if label is None:
+            label = self._label
+        return bar(x=self._data.index, y=self._data.values, label=label,
                    mode=mode, opacity=opacity, **kargs)
 
 

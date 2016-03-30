@@ -26,7 +26,10 @@ def compare_figs(d1, d2):
             assert (d1[k] == d2[k]).all()
         elif hasattr(d1[k], '__iter__'):
             for v1, v2 in zip(d1[k], d2[k]):
-                compare_figs(v1, v2)
+                if isinstance(v1, dict):
+                    compare_figs(v1, v2)
+                else:
+                    assert v1 == v2
         else:
             assert d1[k] == d2[k]
 
@@ -52,8 +55,8 @@ def test_tojson():
                 'data': [{'opacity': None,
                           'name': None,
                           'mode': 'lines+markers',
-                          'y': np.array([0, 1, 2]),
-                          'x': np.array([0, 1, 2]),
+                          'y': [0, 1, 2],
+                          'x': [0, 1, 2],
                           'line': {},
                           'type': 'scatter',
                           'fill': None}]}
