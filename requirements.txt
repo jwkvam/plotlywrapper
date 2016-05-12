@@ -1,0 +1,7 @@
+codecov
+future
+plotly==1.9.5
+pylint
+pytest
+pytest-cov
+pytest-pylint
