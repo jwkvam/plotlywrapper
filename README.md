@@ -48,7 +48,11 @@ pip install plotlywrapper
 
 ## Demo
 
-This [notebook](http://nbviewer.jupyter.org/github/jwkvam/plotlywrapper/blob/master/demo.ipynb) shows off a portion of the API.
+Try out the interactive demo here,
+
+[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org/repo/jwkvam/plotlywrapper)
+
+or view the [notebook](http://nbviewer.jupyter.org/github/jwkvam/plotlywrapper/blob/master/index.ipynb) statically.
 
 ## Testing
 
