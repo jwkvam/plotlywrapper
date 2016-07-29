@@ -1,5 +1,7 @@
 # plotlywrapper: pythonic plotly
 
+<img width="826" alt="screen shot 2016-07-28 at 11 34 33 pm" src="https://cloud.githubusercontent.com/assets/86304/17239866/2c4c30b2-551c-11e6-9bb8-7ed467ebdacb.png">
+
 [![Build Status](https://travis-ci.org/jwkvam/plotlywrapper.svg?branch=master)](https://travis-ci.org/jwkvam/plotlywrapper)
 [![PyPI version](https://badge.fury.io/py/plotlywrapper.svg)](https://badge.fury.io/py/plotlywrapper)
 [![PyPI](https://img.shields.io/pypi/dm/plotlywrapper.svg)](https://badge.fury.io/py/plotlywrapper)
