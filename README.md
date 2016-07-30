@@ -12,7 +12,7 @@ plotlywrapper wraps [plotly](https://plot.ly/python/) to make easy plots easy to
 <p align="center">
 <img width="826" alt="2D Brownian Bridge" src="https://cloud.githubusercontent.com/assets/86304/17239866/2c4c30b2-551c-11e6-9bb8-7ed467ebdacb.png">
 <br>
-2D Brownian Bridge
+2D <a href='https://en.wikipedia.org/wiki/Brownian_bridge'>Brownian Bridge</a>
 </p>
 
 ## Motivation
