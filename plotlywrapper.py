@@ -1,6 +1,7 @@
 """plotly wrapper to make easy plots easy to make"""
 
 from tempfile import NamedTemporaryFile
+from collections import defaultdict
 
 # pylint: disable=redefined-builtin
 from builtins import zip
@@ -16,6 +17,11 @@ from ipykernel import zmqshell
 
 
 __version__ = '0.0.19-dev'
+
+
+def _recursive_dict(*args):
+    recursive_factory = lambda: defaultdict(recursive_factory)
+    return defaultdict(recursive_factory, *args)
 
 
 def _labels(base='trace'):
@@ -60,7 +66,8 @@ class _Chart(object):
             self.data = []
         self.layout = layout
         if layout is None:
-            self.layout = {}
+            layout = {}
+        self.layout = _recursive_dict(layout)
         self.figure_ = None
 
     def __add__(self, other):
@@ -79,28 +86,60 @@ class _Chart(object):
         self.layout['barmode'] = 'stack'
         return self
 
-    def _create_layout_entry(self, key):
-        if key not in self.layout:
-            self.layout[key] = {}
-
     def xlabel(self, label):
-        self._create_layout_entry('xaxis')
-        self.layout['xaxis'] = {'title': label}
+        self.layout['xaxis']['title'] = label
         return self
 
     def ylabel(self, label):
-        self._create_layout_entry('yaxis')
-        self.layout['yaxis'] = {'title': label}
+        self.layout['yaxis']['title'] = label
+        return self
+
+    def xtickangle(self, angle):
+        self.layout['xaxis']['tickangle'] = angle
+        return self
+
+    def ytickangle(self, angle):
+        self.layout['yaxis']['tickangle'] = angle
+        return self
+
+    def xlabelsize(self, size):
+        self.layout['xaxis']['titlefont']['size'] = size
+        return self
+
+    def ylabelsize(self, size):
+        self.layout['yaxis']['titlefont']['size'] = size
+        return self
+
+    def xticksize(self, size):
+        self.layout['xaxis']['tickfont']['size'] = size
+        return self
+
+    def yticksize(self, size):
+        self.layout['yaxis']['tickfont']['size'] = size
         return self
 
     def xlim(self, low, high):
-        self._create_layout_entry('xaxis')
-        self.layout['xaxis'] = {'range': [low, high]}
+        self.layout['xaxis']['range'] = [low, high]
         return self
 
     def ylim(self, low, high):
-        self._create_layout_entry('yaxis')
-        self.layout['yaxis'] = {'range': [low, high]}
+        self.layout['yaxis']['range'] = [low, high]
+        return self
+
+    def xdtick(self, dtick):
+        self.layout['xaxis']['dtick'] = dtick
+        return self
+
+    def ydtick(self, dtick):
+        self.layout['yaxis']['dtick'] = dtick
+        return self
+
+    def xnticks(self, dtick):
+        self.layout['xaxis']['nticks'] = dtick
+        return self
+
+    def ynticks(self, dtick):
+        self.layout['yaxis']['nticks'] = dtick
         return self
 
     def title(self, string):

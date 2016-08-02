@@ -1,6 +1,6 @@
 codecov
 future
-plotly==1.9.5
+plotly==1.12.4
 pylint
 pytest
 pytest-cov
