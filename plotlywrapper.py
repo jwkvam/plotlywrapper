@@ -78,6 +78,14 @@ class _Chart(object):
     def __radd__(self, other):
         return self.__add__(other)
 
+    def width(self, value):
+        self.layout['width'] = value
+        return self
+
+    def height(self, value):
+        self.layout['height'] = value
+        return self
+
     def group(self):
         self.layout['barmode'] = 'group'
         return self
