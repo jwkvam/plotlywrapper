@@ -15,7 +15,7 @@ from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-__version__ = '0.0.19'
+__version__ = '0.0.19-dev'
 
 
 def _labels(base='trace'):
@@ -79,19 +79,27 @@ class _Chart(object):
         self.layout['barmode'] = 'stack'
         return self
 
+    def _create_layout_entry(self, key):
+        if key not in self.layout:
+            self.layout[key] = {}
+
     def xlabel(self, label):
+        self._create_layout_entry('xaxis')
         self.layout['xaxis'] = {'title': label}
         return self
 
     def ylabel(self, label):
+        self._create_layout_entry('yaxis')
         self.layout['yaxis'] = {'title': label}
         return self
 
     def xlim(self, low, high):
+        self._create_layout_entry('xaxis')
         self.layout['xaxis'] = {'range': [low, high]}
         return self
 
     def ylim(self, low, high):
+        self._create_layout_entry('yaxis')
         self.layout['yaxis'] = {'range': [low, high]}
         return self
 
@@ -326,13 +334,13 @@ def surface(x, y, z):
     return _Chart(data=data)
 
 
-def hist(x, mode='overlay', opacity=None, horz=False):
+def hist(x, mode='overlay', label=None, opacity=None, horz=False):
     if horz:
         kargs = dict(y=x)
     else:
         kargs = dict(x=x)
     layout = dict(barmode=mode)
-    data = [go.Histogram(opacity=opacity, **kargs)]
+    data = [go.Histogram(opacity=opacity, name=label, **kargs)]
     return _Chart(data=data, layout=layout)
 
 
