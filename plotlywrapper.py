@@ -296,7 +296,7 @@ def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
 
 
 def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
-           mode='markers'):
+              mode='markers'):
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     z = np.atleast_1d(z)
