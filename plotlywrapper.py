@@ -58,7 +58,11 @@ def _try_pydatetime(x):
     return x
 
 
-class _Chart(object):
+class Chart(object):
+    """
+    Plotly chart base class
+    """
+
     def __init__(self, data=None, layout=None, repr_plot=True):
         self.repr_plot = repr_plot
         self.data = data
@@ -157,7 +161,7 @@ class _Chart(object):
     def __repr__(self):
         if self.repr_plot:
             self.show(filename=None, auto_open=False)
-        return super(_Chart, self).__repr__()
+        return super(Chart, self).__repr__()
 
     def show(self, filename=None, show_link=True, auto_open=True):
         is_notebook = _detect_notebook()
@@ -210,7 +214,7 @@ def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None)
                                y0=ymin, y1=ymax,
                                opacity=opacity,
                                line=lineattr)])
-    return _Chart(layout=layout)
+    return Chart(layout=layout)
 
 
 def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=None):
@@ -228,7 +232,7 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
                                y0=y, y1=y,
                                opacity=opacity,
                                line=lineattr)])
-    return _Chart(layout=layout)
+    return Chart(layout=layout)
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
@@ -263,7 +267,7 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
     else:
         data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode,
                            fill=fill, opacity=opacity)]
-    return _Chart(data=data)
+    return Chart(data=data)
 
 
 def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
@@ -292,11 +296,30 @@ def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
     else:
         data = [go.Scatter3d(x=x, y=y, z=z, name=label, line=lineattr, mode=mode,
                              opacity=opacity)]
-    return _Chart(data=data)
+    return Chart(data=data)
 
 
 def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
               mode='markers'):
+    """3D Scatter Plot
+
+    Parameters
+    ----------
+    x : array-like
+        data on x-dimension
+    y : array-like
+        data on y-dimension
+    z : array-like
+        data on z-dimension
+    label : TODO, optional
+    mode : 'group' or 'stack', default 'group'
+    opacity : TODO, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     z = np.atleast_1d(z)
@@ -321,7 +344,7 @@ def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=No
     else:
         data = [go.Scatter3d(x=x, y=y, z=z, name=label, line=lineattr, mode=mode,
                              opacity=opacity)]
-    return _Chart(data=data)
+    return Chart(data=data)
 
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
@@ -366,7 +389,7 @@ def bar(x=None, y=None, label=None, mode='group', opacity=None):
     else:
         data = [go.Bar(x=x, y=y, name=label, opacity=opacity)]
     layout = {'barmode': mode}
-    return _Chart(data=data, layout=layout)
+    return Chart(data=data, layout=layout)
 
 
 def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
@@ -402,12 +425,12 @@ def rug(x, label=None, opacity=None):
                               anchor='free',
                               position=0.0,
                               showticklabels=False))
-    return _Chart(data=data, layout=layout)
+    return Chart(data=data, layout=layout)
 
 
 def surface(x, y, z):
     data = [go.Surface(x=x, y=y, z=z)]
-    return _Chart(data=data)
+    return Chart(data=data)
 
 
 def hist(x, mode='overlay', label=None, opacity=None, horz=False):
@@ -417,7 +440,7 @@ def hist(x, mode='overlay', label=None, opacity=None, horz=False):
         kargs = dict(x=x)
     layout = dict(barmode=mode)
     data = [go.Histogram(opacity=opacity, name=label, **kargs)]
-    return _Chart(data=data, layout=layout)
+    return Chart(data=data, layout=layout)
 
 
 class _PandasPlotting(object):
