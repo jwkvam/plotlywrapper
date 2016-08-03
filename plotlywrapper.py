@@ -380,6 +380,7 @@ def bar(x=None, y=None, label=None, mode='group', opacity=None):
     Returns
     -------
     Chart
+        A Chart with bar graph data.
 
     """
     assert x is not None or y is not None, "x or y must be something"
