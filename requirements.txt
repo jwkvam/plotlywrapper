@@ -1,5 +1,6 @@
 codecov
 future
+ipython
 numpy
 pandas
 plotly==1.12.4
