@@ -1,13 +1,15 @@
-# plotlywrapper: pythonic plotly
+# Plotlywrapper: pythonic plotly
 
 [![Build Status](https://travis-ci.org/jwkvam/plotlywrapper.svg?branch=master)](https://travis-ci.org/jwkvam/plotlywrapper)
+[![rtd.io](http://readthedocs.org/projects/plotlywrapper/badge/?version=latest)](http://plotlywrapper.readthedocs.io/en/latest/)
 [![PyPI version](https://badge.fury.io/py/plotlywrapper.svg)](https://badge.fury.io/py/plotlywrapper)
 [![PyPI](https://img.shields.io/pypi/dm/plotlywrapper.svg)](https://badge.fury.io/py/plotlywrapper)
 [![codecov.io](https://codecov.io/github/jwkvam/plotlywrapper/coverage.svg?branch=master)](https://codecov.io/github/jwkvam/plotlywrapper?branch=master)
 [![Code Health](https://landscape.io/github/jwkvam/plotlywrapper/master/landscape.svg?style=flat)](https://landscape.io/github/jwkvam/plotlywrapper/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jwkvam/plotlywrapper/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jwkvam/plotlywrapper/?branch=master)
 
-plotlywrapper wraps [plotly](https://plot.ly/python/) to make easy plots easy to make.
+Plotlywrapper wraps [plotly](https://plot.ly/python/) to make easy plots easy to make.
+Check out the [docs](http://plotlywrapper.readthedocs.io/en/latest/)!
 
 <p align="center">
 <img width="826" alt="2D Brownian Bridge" src="https://cloud.githubusercontent.com/assets/86304/17239866/2c4c30b2-551c-11e6-9bb8-7ed467ebdacb.png">
