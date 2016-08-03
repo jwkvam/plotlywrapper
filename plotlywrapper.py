@@ -60,7 +60,8 @@ def _try_pydatetime(x):
 
 class Chart(object):
     """
-    Plotly chart base class
+    Plotly chart base class, usually this object will get created
+    by from a function.
     """
 
     def __init__(self, data=None, layout=None, repr_plot=True):
@@ -83,6 +84,18 @@ class Chart(object):
         return self.__add__(other)
 
     def width(self, value):
+        """Sets the width of the plot in pixels.
+
+        Parameters
+        ----------
+        value : int
+            Width of the plot in pixels.
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['width'] = value
         return self
 
