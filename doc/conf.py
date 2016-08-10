@@ -40,6 +40,12 @@ extensions = [
     'sphinx.ext.napoleon',
 ]
 
+googleanalytics_id = 'UA-45051049-2'
+# +	UA id for your site, example::
+# +		googleanalytics_id = 'UA-123-123-123'
+
+googleanalytics_enabled = True
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
