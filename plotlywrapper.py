@@ -119,6 +119,10 @@ class Chart(object):
         self.layout['yaxis']['title'] = label
         return self
 
+    def zlabel(self, label):
+        self.layout['zaxis']['title'] = label
+        return self
+
     def xtickangle(self, angle):
         self.layout['xaxis']['tickangle'] = angle
         return self
@@ -249,7 +253,7 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         mode='lines+markers', fill=None):
+         mode='lines+markers', fill=None, markersize=6):
     assert x is not None or y is not None, "x or y must be something"
     lineattr = {}
     if color:
@@ -275,11 +279,11 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
             else:
                 label = _labels(label)
         data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode,
-                           fill=fill, opacity=opacity)
+                           fill=fill, opacity=opacity, marker=dict(size=markersize))
                 for ll, yy in zip(label, y.T)]
     else:
         data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode,
-                           fill=fill, opacity=opacity)]
+                           fill=fill, opacity=opacity, marker=dict(size=markersize))]
     return Chart(data=data)
 
 
@@ -361,9 +365,9 @@ def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=No
 
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-            mode='markers'):
+            markersize=6, mode='markers'):
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
-                mode=mode, opacity=opacity)
+                mode=mode, opacity=opacity, markersize=markersize)
 
 
 def bar(x=None, y=None, label=None, mode='group', opacity=None):
