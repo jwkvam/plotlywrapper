@@ -16,7 +16,7 @@ from IPython import get_ipython
 from ipykernel import zmqshell
 
 
-__version__ = '0.0.20-dev'
+__version__ = '0.0.21'
 
 
 def _recursive_dict(*args):
