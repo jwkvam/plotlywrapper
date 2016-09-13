@@ -4,7 +4,6 @@ ipykernel
 ipython
 numpy
 pandas
-plotly==1.12.4
 pylint
 pytest
 pytest-cov

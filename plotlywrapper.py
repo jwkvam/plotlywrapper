@@ -12,11 +12,9 @@ import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
 
-from IPython import get_ipython
-from ipykernel import zmqshell
 
 
-__version__ = '0.0.21'
+__version__ = '0.0.22-dev'
 
 
 def _recursive_dict(*args):
@@ -33,8 +31,18 @@ def _labels(base='trace'):
 
 def _detect_notebook():
     """
-    this isn't 100% correct but seems good enough
+    This isn't 100% correct but seems good enough
+
+    Returns
+    -------
+    bool
+        True if it detects this is a notebook, otherwise False.
     """
+    try:
+        from IPython import get_ipython
+        from ipykernel import zmqshell
+    except ImportError:
+        return False
     kernel = get_ipython()
     return isinstance(kernel, zmqshell.ZMQInteractiveShell)
 
