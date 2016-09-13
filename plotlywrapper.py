@@ -108,34 +108,120 @@ class Chart(object):
         return self
 
     def height(self, value):
+        """Sets the height of the plot in pixels.
+
+        Parameters
+        ----------
+        value : int
+            Height of the plot in pixels.
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['height'] = value
         return self
 
     def group(self):
+        """Sets bar graph display mode to "grouped".
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['barmode'] = 'group'
         return self
 
     def stack(self):
+        """Sets bar graph display mode to "stacked".
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['barmode'] = 'stack'
         return self
 
     def xlabel(self, label):
+        """Sets the x-axis title.
+
+        Parameters
+        ----------
+        value : str
+            Label for the x-axis
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['xaxis']['title'] = label
         return self
 
     def ylabel(self, label):
+        """Sets the y-axis title.
+
+        Parameters
+        ----------
+        value : str
+            Label for the y-axis
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['yaxis']['title'] = label
         return self
 
     def zlabel(self, label):
+        """Sets the z-axis title.
+
+        Parameters
+        ----------
+        value : str
+            Label for the z-axis
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['zaxis']['title'] = label
         return self
 
     def xtickangle(self, angle):
+        """Sets the angle of the x-axis tick labels.
+
+        Parameters
+        ----------
+        value : int
+            Angle in degrees
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['xaxis']['tickangle'] = angle
         return self
 
     def ytickangle(self, angle):
+        """Sets the angle of the y-axis tick labels.
+
+        Parameters
+        ----------
+        value : int
+            Angle in degrees
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['yaxis']['tickangle'] = angle
         return self
 
