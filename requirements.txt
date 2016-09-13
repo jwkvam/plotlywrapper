@@ -4,6 +4,7 @@ ipykernel
 ipython
 numpy
 pandas
+plotly
 pylint
 pytest
 pytest-cov
