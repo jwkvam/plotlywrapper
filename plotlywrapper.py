@@ -171,12 +171,12 @@ class Chart(object):
         self.layout['yaxis']['dtick'] = dtick
         return self
 
-    def xnticks(self, dtick):
-        self.layout['xaxis']['nticks'] = dtick
+    def xnticks(self, nticks):
+        self.layout['xaxis']['nticks'] = nticks
         return self
 
-    def ynticks(self, dtick):
-        self.layout['yaxis']['nticks'] = dtick
+    def ynticks(self, nticks):
+        self.layout['yaxis']['nticks'] = nticks
         return self
 
     def title(self, string):
