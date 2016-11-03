@@ -161,20 +161,22 @@ class Chart(object):
         self.layout['xaxis']['title'] = label
         return self
 
-    def ylabel(self, label):
+    def ylabel(self, label, index=1):
         """Sets the y-axis title.
 
         Parameters
         ----------
         value : str
             Label for the y-axis
+        index : int
+            Y-axis index
 
         Returns
         -------
         Chart
 
         """
-        self.layout['yaxis']['title'] = label
+        self.layout['yaxis' + str(index)]['title'] = label
         return self
 
     def zlabel(self, label):
@@ -209,61 +211,69 @@ class Chart(object):
         self.layout['xaxis']['tickangle'] = angle
         return self
 
-    def ytickangle(self, angle):
+    def ytickangle(self, angle, index=1):
         """Sets the angle of the y-axis tick labels.
 
         Parameters
         ----------
         value : int
             Angle in degrees
+        index : int, optional
+            Y-axis index
 
         Returns
         -------
         Chart
 
         """
-        self.layout['yaxis']['tickangle'] = angle
+        self.layout['yaxis' + str(index)]['tickangle'] = angle
         return self
 
     def xlabelsize(self, size):
         self.layout['xaxis']['titlefont']['size'] = size
         return self
 
-    def ylabelsize(self, size):
-        self.layout['yaxis']['titlefont']['size'] = size
+    def ylabelsize(self, size, index=1):
+        self.layout['yaxis' + str(index)]['titlefont']['size'] = size
         return self
 
     def xticksize(self, size):
         self.layout['xaxis']['tickfont']['size'] = size
         return self
 
-    def yticksize(self, size):
-        self.layout['yaxis']['tickfont']['size'] = size
+    def yticksize(self, size, index=1):
+        self.layout['yaxis' + str(index)]['tickfont']['size'] = size
         return self
 
     def xlim(self, low, high):
         self.layout['xaxis']['range'] = [low, high]
         return self
 
-    def ylim(self, low, high):
-        self.layout['yaxis']['range'] = [low, high]
+    def ylim(self, low, high, index=1):
+        self.layout['yaxis' + str(index)]['range'] = [low, high]
         return self
 
     def xdtick(self, dtick):
         self.layout['xaxis']['dtick'] = dtick
         return self
 
-    def ydtick(self, dtick):
-        self.layout['yaxis']['dtick'] = dtick
+    def ydtick(self, dtick, index=1):
+        self.layout['yaxis' + str(index)]['dtick'] = dtick
         return self
 
     def xnticks(self, nticks):
         self.layout['xaxis']['nticks'] = nticks
         return self
 
-    def ynticks(self, nticks):
-        self.layout['yaxis']['nticks'] = nticks
+    def ynticks(self, nticks, index=1):
+        self.layout['yaxis' + str(index)]['nticks'] = nticks
         return self
+
+    def yaxis_left(self, index=1):
+        self.layout['yaxis' + str(index)]['side'] = 'left'
+
+    def yaxis_right(self, index=1):
+        self.layout['yaxis' + str(index)]['side'] = 'right'
 
     def title(self, string):
         self.layout['title'] = string
@@ -347,8 +357,9 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         mode='lines+markers', fill=None, markersize=6):
+         mode='lines+markers', yaxis=1, fill=None, markersize=6):
     assert x is not None or y is not None, "x or y must be something"
+    yn = 'y' + str(yaxis)
     lineattr = {}
     if color:
         lineattr['color'] = color
@@ -373,12 +384,15 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
             else:
                 label = _labels(label)
         data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode,
-                           fill=fill, opacity=opacity, marker=dict(size=markersize))
+                           fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))
                 for ll, yy in zip(label, y.T)]
     else:
         data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode,
-                           fill=fill, opacity=opacity, marker=dict(size=markersize))]
-    return Chart(data=data)
+                           fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))]
+    if yaxis == 1:
+        return Chart(data=data)
+    else:
+        return Chart(data=data, layout={'yaxis' + str(yaxis): dict(overlaying='y')})
 
 
 def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
@@ -459,12 +473,12 @@ def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=No
 
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-            markersize=6, mode='markers'):
-    return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
-                mode=mode, opacity=opacity, markersize=markersize)
+            markersize=6, yaxis=1, fill=None, mode='markers'):
+    return line(x=x, y=y, label=label, color=color, width=width, dash=dash, opacity=opacity,
+                mode=mode, yaxis=yaxis, fill=fill, markersize=markersize)
 
 
-def bar(x=None, y=None, label=None, mode='group', opacity=None):
+def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
     """Create a bar chart
 
     Parameters
@@ -482,6 +496,7 @@ def bar(x=None, y=None, label=None, mode='group', opacity=None):
 
     """
     assert x is not None or y is not None, "x or y must be something"
+    yn = 'y' + str(yaxis)
     if y is None:
         y = x
         x = None
@@ -497,11 +512,14 @@ def bar(x=None, y=None, label=None, mode='group', opacity=None):
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Bar(x=x, y=yy, name=ll, opacity=opacity) for ll, yy in zip(label, y.T)]
+        data = [go.Bar(x=x, y=yy, name=ll, yaxis=yn, opacity=opacity) for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Bar(x=x, y=y, name=label, opacity=opacity)]
+        data = [go.Bar(x=x, y=y, name=label, yaxis=yn, opacity=opacity)]
     layout = {'barmode': mode}
-    return Chart(data=data, layout=layout)
+    if yaxis == 1:
+        return Chart(data=data)
+    else:
+        return Chart(data=data, layout={'yaxis' + str(yaxis): dict(overlaying='y')})
 
 
 def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,

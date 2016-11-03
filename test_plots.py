@@ -59,6 +59,7 @@ def test_tojson():
                           'y': [0, 1, 2],
                           'x': [0, 1, 2],
                           'line': {},
+                          'yaxis': 'y1',
                           'type': 'scatter',
                           'fill': None}]}
     compare_figs(js, expected)
@@ -78,15 +79,17 @@ def test_one():
     plot.show(auto_open=False)
 
     expect = {'layout': {'barmode': 'stack', 'xaxis': {'title': 'x axis'},
-                         'yaxis': {'title': 'y label'}},
+                         'yaxis1': {'title': 'y label'}},
               'data': [{'y': np.array([20, 14, 23]),
                         'x': np.array([0, 1, 2]),
                         'opacity': None,
                         'type': 'bar',
+                        'yaxis': 'y1',
                         'name': 'new york'},
                        {'y': np.array([12, 18, 29]),
                         'x': np.array([0, 1, 2]), 'type': 'bar',
                         'opacity': None,
+                        'yaxis': 'y1',
                         'name': None},
                        {'y': np.array([3, 8, 9]),
                         'x': np.array([0, 1, 2]),
@@ -94,6 +97,7 @@ def test_one():
                         'type': 'scatter',
                         'marker': dict(size=6),
                         'fill': None,
+                        'yaxis': 'y1',
                         'mode': 'lines+markers',
                         'opacity': None,
                         'name': 'hello'}]}
@@ -102,13 +106,14 @@ def test_one():
 
 
 def test_two():
-    expect = {'layout': {'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}},
+    expect = {'layout': {'xaxis': {'title': 'x axis'}, 'yaxis1': {'title': 'y label'}},
               'data': [{'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
                         'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
                         'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                         'marker': dict(size=6),
                         'type': 'scatter',
                         'fill': None,
+                        'yaxis': 'y1',
                         'mode': 'lines+markers',
                         'opacity': None,
                         'name': 'hello'}]}
