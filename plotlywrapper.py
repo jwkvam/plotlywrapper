@@ -14,7 +14,7 @@ import pandas as pd
 
 
 
-__version__ = '0.0.22-dev'
+__version__ = '0.0.22'
 
 
 def _recursive_dict(*args):
