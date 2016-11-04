@@ -422,7 +422,20 @@ class Chart(object):
 
 
 def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None):
-    """Draws a vertical line"""
+    """Draws a vertical line from `ymin` to `ymax`.
+
+    Parameters
+    ----------
+    xmin : int, optional
+    xmax : int, optional
+    color : str, optional
+    width : number, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     lineattr = {}
     if color:
         lineattr['color'] = color
@@ -440,7 +453,20 @@ def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None)
 
 
 def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=None):
-    """Draws a horizontal line"""
+    """Draws a horizontal line from `xmin` to `xmax`.
+
+    Parameters
+    ----------
+    xmin : int, optional
+    xmax : int, optional
+    color : str, optional
+    width : number, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     lineattr = {}
     if color:
         lineattr['color'] = color
@@ -460,6 +486,19 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
          mode='lines+markers', yaxis=1, fill=None, text="",
          markersize=6):
+    """Draws connected dots.
+
+    Parameters
+    ----------
+    x : array-like, optional
+    y : array-like, optional
+    label : array-like, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     assert x is not None or y is not None, "x or y must be something"
     yn = 'y' + str(yaxis)
     lineattr = {}
@@ -576,6 +615,19 @@ def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=No
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
             markersize=6, yaxis=1, fill=None, mode='markers'):
+    """Draws dots.
+
+    Parameters
+    ----------
+    x : array-like, optional
+    y : array-like, optional
+    label : array-like, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash, opacity=opacity,
                 mode=mode, yaxis=yaxis, fill=fill, markersize=markersize)
 
