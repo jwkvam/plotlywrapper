@@ -1,6 +1,8 @@
 Charts
 ======
 
+These are the basic chart types Plotlywrapper supports.
+
 Scatter
 -------
 
