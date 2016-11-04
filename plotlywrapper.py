@@ -459,7 +459,8 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
 
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         mode='lines+markers', yaxis=1, fill=None, markersize=6):
+         mode='lines+markers', yaxis=1, fill=None, text="",
+         markersize=6):
     assert x is not None or y is not None, "x or y must be something"
     yn = 'y' + str(yaxis)
     lineattr = {}
@@ -485,11 +486,11 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode,
+        data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode, text=text,
                            fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))
                 for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode,
+        data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode, text=text,
                            fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))]
     if yaxis == 1:
         return Chart(data=data)
@@ -675,7 +676,13 @@ def hist(x, mode='overlay', label=None, opacity=None, horz=False):
     return Chart(data=data, layout=layout)
 
 
-class _PandasPlotting(object):
+class PandasPlotting(object):
+    """
+    These plotting tools can be accessed through dataframe instance
+    accessor `.plotly`.
+
+    For example, `df.plotly.line()`
+    """
 
     def __init__(self, data):
         self._data = data
@@ -705,6 +712,17 @@ class _PandasPlotting(object):
         return bar(x=self._data.index, y=self._data.values, label=label,
                    mode=mode, opacity=opacity, **kargs)
 
+    def stack(self, mode='lines', label=None, **kargs):
+        if label is None:
+            label = self._label
+
+        cum = self._data.cumsum(axis=1)
+        chart = Chart()
+        for l, (_, s), (_, o) in zip(label, cum.iteritems(), self._data.iteritems()):
+            chart += line(x=s.index, y=s.values, label=l,
+                          fill='tonexty', mode=mode, text=o.values)
+        return chart
+
 
 # pylint: disable=too-few-public-methods
 class _AccessorProperty(object):
@@ -728,5 +746,5 @@ class _AccessorProperty(object):
         raise AttributeError("can't delete attribute")
 
 
-pd.DataFrame.plotly = _AccessorProperty(_PandasPlotting, _PandasPlotting)
-pd.Series.plotly = _AccessorProperty(_PandasPlotting, _PandasPlotting)
+pd.DataFrame.plotly = _AccessorProperty(PandasPlotting, PandasPlotting)
+pd.Series.plotly = _AccessorProperty(PandasPlotting, PandasPlotting)
