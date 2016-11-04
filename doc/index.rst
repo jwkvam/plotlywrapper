@@ -3,23 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Plotlywrapper's documentation!
-=========================================
+Plotlywrapper: Pythonic Plotly
+==============================
 
-Contents:
+Plotlywrapper is a thin API over Plotly.
+The goal is make simple plots easy to make.
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-.. automodule:: plotlywrapper
-   :members:
-   :undoc-members:
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+    charts
+    styling
+    pandas
