@@ -14,7 +14,7 @@ import pandas as pd
 
 
 
-__version__ = '0.0.23'
+__version__ = '0.0.24-dev'
 
 
 def _recursive_dict(*args):
@@ -701,18 +701,59 @@ class PandasPlotting(object):
 
     def scatter(self, label=None, color=None, width=None, dash=None,
                 opacity=None, mode='markers', **kargs):
+        """Creates a bar chart.
+
+        Parameters
+        ----------
+        label : list of strings, optional
+            list of labels to override column names
+
+
+        Returns
+        -------
+        Chart
+
+        """
         if label is None:
             label = self._label
         return scatter(x=self._data.index, y=self._data.values, label=label,
                        color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
 
     def bar(self, label=None, mode='group', opacity=None, **kargs):
+        """Creates a bar chart.
+
+        Parameters
+        ----------
+        label : list of strings, optional
+            list of labels to override column names
+        mode : str, optional
+            'group' or 'stack'
+
+        Returns
+        -------
+        Chart
+
+        """
         if label is None:
             label = self._label
         return bar(x=self._data.index, y=self._data.values, label=label,
                    mode=mode, opacity=opacity, **kargs)
 
     def stack(self, mode='lines', label=None, **kargs):
+        """Creates a stacked area plot.
+
+        Parameters
+        ----------
+        mode : string, optional
+        label : list of strings, optional
+            list of labels to override column names
+
+
+        Returns
+        -------
+        Chart
+
+        """
         if label is None:
             label = self._label
 
