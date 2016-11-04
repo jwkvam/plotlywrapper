@@ -13,7 +13,6 @@ import numpy as np
 import pandas as pd
 
 
-
 __version__ = '0.0.24-dev'
 
 
@@ -681,7 +680,14 @@ class PandasPlotting(object):
     These plotting tools can be accessed through dataframe instance
     accessor `.plotly`.
 
-    For example, `df.plotly.line()`
+    Examples
+    --------
+    Here's an example of how to do that.
+
+    >>> df = pd.DataFrame([[1, 2], [1, 4]])
+    >>> chart = df.plotly.line()
+    >>> chart.show()
+
     """
 
     def __init__(self, data):
