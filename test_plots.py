@@ -56,6 +56,7 @@ def test_tojson():
                           'name': None,
                           'mode': 'lines+markers',
                           'marker': dict(size=6),
+                          'text': "",
                           'y': [0, 1, 2],
                           'x': [0, 1, 2],
                           'line': {},
@@ -98,6 +99,7 @@ def test_one():
                         'marker': dict(size=6),
                         'fill': None,
                         'yaxis': 'y1',
+                        'text': "",
                         'mode': 'lines+markers',
                         'opacity': None,
                         'name': 'hello'}]}
@@ -113,6 +115,7 @@ def test_two():
                         'marker': dict(size=6),
                         'type': 'scatter',
                         'fill': None,
+                        'text': "",
                         'yaxis': 'y1',
                         'mode': 'lines+markers',
                         'opacity': None,

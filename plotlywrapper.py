@@ -718,9 +718,9 @@ class PandasPlotting(object):
 
         cum = self._data.cumsum(axis=1)
         chart = Chart()
-        for l, (_, s), (_, o) in zip(label, cum.iteritems(), self._data.iteritems()):
-            chart += line(x=s.index, y=s.values, label=l,
-                          fill='tonexty', mode=mode, text=o.values)
+        for lab, (_, ser), (_, orig) in zip(label, cum.iteritems(), self._data.iteritems()):
+            chart += line(x=ser.index, y=ser.values, label=lab,
+                          fill='tonexty', mode=mode, text=orig.values, **kargs)
         return chart
 
 
