@@ -230,26 +230,95 @@ class Chart(object):
         return self
 
     def xlabelsize(self, size):
+        """Set the size of the label
+
+        Parameters
+        ----------
+        size : int
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['xaxis']['titlefont']['size'] = size
         return self
 
     def ylabelsize(self, size, index=1):
+        """Set the size of the label
+
+        Parameters
+        ----------
+        size : int
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['yaxis' + str(index)]['titlefont']['size'] = size
         return self
 
     def xticksize(self, size):
+        """Set the tick font size
+
+        Parameters
+        ----------
+        size : int
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['xaxis']['tickfont']['size'] = size
         return self
 
     def yticksize(self, size, index=1):
+        """Set the tick font size
+
+        Parameters
+        ----------
+        size : int
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['yaxis' + str(index)]['tickfont']['size'] = size
         return self
 
     def xlim(self, low, high):
+        """Set xaxis limits
+
+        Parameters
+        ----------
+        low : number
+        high : number
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['xaxis']['range'] = [low, high]
         return self
 
     def ylim(self, low, high, index=1):
+        """Set yaxis limits
+
+        Parameters
+        ----------
+        low : number
+        high : number
+        index : int, optional
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['yaxis' + str(index)]['range'] = [low, high]
         return self
 
@@ -270,12 +339,45 @@ class Chart(object):
         return self
 
     def yaxis_left(self, index=1):
+        """Puts the yaxis on the left hand side
+
+        Parameters
+        ----------
+        index : int, optional
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['yaxis' + str(index)]['side'] = 'left'
 
     def yaxis_right(self, index=1):
+        """Puts the yaxis on the right hand side
+
+        Parameters
+        ----------
+        index : int, optional
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['yaxis' + str(index)]['side'] = 'right'
 
     def title(self, string):
+        """Sets the title of the plot
+
+        Parameters
+        ----------
+        string : str
+
+        Returns
+        -------
+        Chart
+
+        """
         self.layout['title'] = string
         return self
 
