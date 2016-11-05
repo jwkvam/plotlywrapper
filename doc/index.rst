@@ -9,6 +9,18 @@ Plotlywrapper: Pythonic Plotly
 Plotlywrapper is a thin API over Plotly.
 The goal is make simple plots easy to make.
 
+Installation
+------------
+
+To install, simply use pip::
+
+    pip install plotlywrapper
+
+API
+---
+
+The API is documented in the following pages.
+
 .. toctree::
     :maxdepth: 2
 
