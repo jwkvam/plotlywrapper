@@ -678,12 +678,38 @@ def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
 
 def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
               mode='lines+markers', **kargs):
+    """Fill to zero.
+
+    Parameters
+    ----------
+    x : array-like, optional
+    y : TODO, optional
+    label : TODO, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
                 opacity=opacity, mode=mode, fill='tozeroy', **kargs)
 
 
 def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=None, dash=None,
                  opacity=None, mode='lines+markers', **kargs):
+    """Fill between `ylow` and `yhigh`
+
+    Parameters
+    ----------
+    x : array-like, optional
+    ylow : TODO, optional
+    yhigh : TODO, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     plot = line(x=x, y=ylow, label=label, color=color, width=width, dash=dash,
                 opacity=opacity, mode=mode, fill=None, **kargs)
     plot += line(x=x, y=yhigh, label=label, color=color, width=width, dash=dash,
@@ -692,6 +718,19 @@ def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=No
 
 
 def rug(x, label=None, opacity=None):
+    """Rug chart.
+
+    Parameters
+    ----------
+    x : array-like, optional
+    label : TODO, optional
+    opacity : TODO, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     x = _try_pydatetime(x)
     x = np.atleast_1d(x)
     data = [go.Scatter(x=x, y=np.ones_like(x), name=label,
@@ -713,11 +752,39 @@ def rug(x, label=None, opacity=None):
 
 
 def surface(x, y, z):
+    """Surface plot.
+
+    Parameters
+    ----------
+    x : array-like, optional
+    y : array-like, optional
+    z : array-like, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     data = [go.Surface(x=x, y=y, z=z)]
     return Chart(data=data)
 
 
 def hist(x, mode='overlay', label=None, opacity=None, horz=False):
+    """Histogram.
+
+    Parameters
+    ----------
+    x : array-like, optional
+    mode : str, optional
+    label : TODO, optional
+    opacity : float, optional
+    horz : bool, optional
+
+    Returns
+    -------
+    Chart
+
+    """
     if horz:
         kargs = dict(y=x)
     else:
