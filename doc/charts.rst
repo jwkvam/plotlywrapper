@@ -1,18 +1,33 @@
+.. raw:: html
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 Charts
 ======
 
 These are the basic chart types Plotlywrapper supports.
 
+
 Scatter
 -------
 
+.. raw:: html
+   :file: fig_line.html
+
 .. autofunction:: plotlywrapper.line
+
+.. raw:: html
+   :file: fig_scatter.html
+
 .. autofunction:: plotlywrapper.scatter
 
 Bar
 ---
 
-.. autofunction:: plotlywrapper.scatter
+.. raw:: html
+   :file: fig_bar.html
+
+.. autofunction:: plotlywrapper.bar
 
 Histogram
 ---------

@@ -401,11 +401,13 @@ class Chart(object):
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(self.figure_, show_link=show_link, **kargs)
 
-    def save(self, filename=None, show_link=True, auto_open=False):
+    def save(self, filename=None, show_link=True, auto_open=False,
+             output='file', plotlyjs=True):
         if filename is None:
             filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
-        py.plot(self.figure_, show_link=show_link, filename=filename, auto_open=auto_open)
+        py.plot(self.figure_, show_link=show_link, filename=filename, auto_open=auto_open,
+                output_type=output, include_plotlyjs=plotlyjs)
         return filename
 
     def to_json(self):
