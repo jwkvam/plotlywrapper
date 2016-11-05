@@ -27,3 +27,5 @@ The API is documented in the following pages.
     charts
     styling
     pandas
+    examples
+    unsupported
