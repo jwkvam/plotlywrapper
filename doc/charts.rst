@@ -32,12 +32,22 @@ Bar
 Histogram
 ---------
 
+.. raw:: html
+   :file: fig_hist.html
+
 .. autofunction:: plotlywrapper.hist
 
 Filled Area
 -----------
 
+.. raw:: html
+   :file: fig_zero.html
+
 .. autofunction:: plotlywrapper.fill_zero
+
+.. raw:: html
+   :file: fig_between.html
+
 .. autofunction:: plotlywrapper.fill_between
 
 3D

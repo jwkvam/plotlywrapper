@@ -787,6 +787,7 @@ def hist(x, mode='overlay', label=None, opacity=None, horz=False):
     Chart
 
     """
+    x = np.atleast_1d(x)
     if horz:
         kargs = dict(y=x)
     else:
