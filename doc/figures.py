@@ -42,6 +42,10 @@ def twin_axes():
     chart.yaxis_right(2)
     chart.save('fig_twinx.html', **options)
 
+def bubble():
+    chart = pw.scatter(data, markersize=np.arange(1, 6) * 10)
+    chart.save('fig_bubble.html', **options)
+
 if __name__ == "__main__":
     line()
     scatter()
@@ -50,4 +54,4 @@ if __name__ == "__main__":
     fill_zero()
     fill_between()
     twin_axes()
-
+    bubble()
