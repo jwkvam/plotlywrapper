@@ -3,6 +3,11 @@
 
 import plotlywrapper as pw
 import numpy as np
+# from numpy import random as rng
+import random
+random.seed(0)
+
+# rng.seed(0)
 
 options = dict(output='file',
                plotlyjs=False,
@@ -31,6 +36,12 @@ def fill_zero():
 def fill_between():
     pw.fill_between(range(5), data, data2).save('fig_between.html', **options)
 
+def twin_axes():
+    chart = pw.bar(range(20, 15, -1))
+    chart += pw.line(range(5), yaxis=2)
+    chart.yaxis_right(2)
+    chart.save('fig_twinx.html', **options)
+
 if __name__ == "__main__":
     line()
     scatter()
@@ -38,4 +49,5 @@ if __name__ == "__main__":
     hist()
     fill_zero()
     fill_between()
+    twin_axes()
 
