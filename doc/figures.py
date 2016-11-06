@@ -30,6 +30,10 @@ def scatter():
 def hist():
     pw.hist(np.sin(np.linspace(0, 2*np.pi, 100))).save('fig_hist.html', **options)
 
+def hist2d():
+    pw.hist2d(np.sin(np.linspace(0, 2*np.pi, 100)),
+              np.cos(np.linspace(0, 2*np.pi, 100))).save('fig_hist2d.html', **options)
+
 def fill_zero():
     chart = pw.fill_zero(data).save('fig_zero.html', **options)
 
@@ -51,6 +55,7 @@ if __name__ == "__main__":
     scatter()
     bar()
     hist()
+    hist2d()
     fill_zero()
     fill_between()
     twin_axes()

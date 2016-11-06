@@ -75,6 +75,21 @@ hist
 .. raw:: html
    :file: fig_hist.html
 
+hist2d
+~~~~~~
+
+.. autofunction:: plotlywrapper.hist2d
+
+**Examples**
+
+.. code-block:: python
+
+    hist2d(np.sin(np.linspace(0, 2*np.pi, 100)),
+           np.cos(np.linspace(0, 2*np.pi, 100)))
+
+.. raw:: html
+   :file: fig_hist2d.html
+
 Filled Area
 -----------
 

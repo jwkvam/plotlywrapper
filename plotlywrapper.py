@@ -798,6 +798,27 @@ def hist(x, mode='overlay', label=None, opacity=None, horz=False):
     return Chart(data=data, layout=layout)
 
 
+def hist2d(x, y, label=None, opacity=None):
+    """2D Histogram.
+
+    Parameters
+    ----------
+    x : array-like, optional
+    y : array-like, optional
+    label : TODO, optional
+    opacity : float, optional
+
+    Returns
+    -------
+    Chart
+
+    """
+    x = np.atleast_1d(x)
+    y = np.atleast_1d(y)
+    data = [go.Histogram2d(x=x, y=y, opacity=opacity, name=label)]
+    return Chart(data=data)
+
+
 class PandasPlotting(object):
     """
     These plotting tools can be accessed through dataframe instance
