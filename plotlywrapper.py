@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.24-dev'
+__version__ = '0.0.24'
 
 
 def _recursive_dict(*args):
@@ -406,7 +406,7 @@ class Chart(object):
         if filename is None:
             filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
-        # TODO this doesn't work for output 'div'
+        # NOTE: this doesn't work for output 'div'
         py.plot(self.figure_, show_link=show_link, filename=filename, auto_open=auto_open,
                 output_type=output, include_plotlyjs=plotlyjs)
         return filename
