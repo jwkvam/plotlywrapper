@@ -30,6 +30,9 @@ def scatter():
 def hist():
     pw.hist(np.sin(np.linspace(0, 2*np.pi, 100))).save('fig_hist.html', **options)
 
+def heatmap():
+    pw.heatmap(np.arange(25).reshape(5, -1)).save('fig_heatmap.html', **options)
+
 def hist2d():
     pw.hist2d(np.sin(np.linspace(0, 2*np.pi, 100)),
               np.cos(np.linspace(0, 2*np.pi, 100))).save('fig_hist2d.html', **options)
@@ -60,3 +63,4 @@ if __name__ == "__main__":
     fill_between()
     twin_axes()
     bubble()
+    heatmap()

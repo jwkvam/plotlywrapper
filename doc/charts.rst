@@ -122,6 +122,23 @@ fill_between
    :file: fig_between.html
 
 
+Heatmap
+-------
+
+heatmap
+~~~~~~~
+
+.. autofunction:: plotlywrapper.heatmap
+
+**Examples**
+
+.. code-block:: python
+
+    heatmap(np.arange(25).reshape(5, -1))
+
+.. raw:: html
+   :file: fig_heatmap.html
+
 3D
 --
 

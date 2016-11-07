@@ -679,6 +679,32 @@ def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
                                         'yaxis' + str(yaxis): dict(overlaying='y')})
 
 
+def heatmap(z, x=None, y=None, colorscale='Viridis'):
+    """Create a heatmap
+
+    Parameters
+    ----------
+    z : TODO
+    x : TODO, optional
+    y : TODO, optional
+    colorscale : TODO, optional
+
+    Returns
+    -------
+    Chart
+
+
+    """
+    z = np.atleast_1d(z)
+    data = [go.Heatmap(
+        z=z,
+        x=x,
+        y=y,
+        colorscale=colorscale
+    )]
+    return Chart(data=data)
+
+
 def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
               mode='lines+markers', **kargs):
     """Fill to zero.
