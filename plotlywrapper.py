@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.24'
+__version__ = '0.0.25-dev'
 
 
 def _recursive_dict(*args):
@@ -142,6 +142,21 @@ class Chart(object):
 
         """
         self.layout['barmode'] = 'stack'
+        return self
+
+    def legend(self, visible=True):
+        """Make legend visible.
+
+        Parameters
+        ----------
+        visible : bool, optional
+
+        Returns
+        -------
+        Chart
+
+        """
+        self.layout['showlegend'] = visible
         return self
 
     def xlabel(self, label):
