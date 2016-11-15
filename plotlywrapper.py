@@ -482,7 +482,7 @@ def spark_shape(points, shapes, fill=None, color='blue', yindex=0, height=0.4):
     ----------
     points : array-like
     shapes : array-like
-    fill : array-like
+    fill : array-like, optional
 
     Returns
     -------
@@ -1053,37 +1053,15 @@ class PandasPlotting(object):
         """
         if label is None:
             label = self._label
-        # data = [{'marker': {'color': 'white'},
-        #          'x': [points[0], points[-1]],
-        #          'y': [yindex, yindex]}]
-        #
+
         div = self._data.max(axis=0) - self._data.min(axis=0) + epsilon
         normed = (self._data - self._data.mean(axis=0)) / div * percent / 100.
-
         normed += np.arange(self._data.shape[1])
 
-        # lays = []
-        # for i, s in enumerate(shapes):
-        #     if s is None:
-        #         continue
-        #     if fill[i]:
-        #         fillcolor = color
-        #     else:
-        #         fillcolor = 'white'
-        #     lays.append(
-        #         dict(type=s,
-        #              x0=points[i], x1=points[i+1],
-        #              y0=yindex - h2, y1=yindex + h2,
-        #              xref='x', yref='y',
-        #              fillcolor=fillcolor,
-        #              line=dict(color=color))
-        #     )
-        chart = line(x=self._data.index, y=normed)
-
+        chart = line(x=self._data.index, y=normed, mode=mode)
         chart.ytickvals(list(range(3)))
         chart.yticktext(self._data.columns)
         chart.legend(False)
-
         return chart
 
 
