@@ -1,5 +1,7 @@
 """plotly wrapper to make easy plots easy to make"""
 
+from __future__ import division
+
 from tempfile import NamedTemporaryFile
 from collections import defaultdict
 
@@ -50,6 +52,8 @@ def _merge_layout(x, y):
     z = y.copy()
     if 'shapes' in z and 'shapes' in x:
         x['shapes'] += z['shapes']
+    # if 'yaxis' in z and 'yaxis' in x:
+    #     if 'tickvals'
     z.update(x)
     return z
 
@@ -303,6 +307,36 @@ class Chart(object):
         self.layout['yaxis' + str(index)]['tickfont']['size'] = size
         return self
 
+    def ytickvals(self, values, index=1):
+        """Set the tick values
+
+        Parameters
+        ----------
+        values : array-like
+
+        Returns
+        -------
+        Chart
+
+        """
+        self.layout['yaxis' + str(index)]['tickvals'] = values
+        return self
+
+    def yticktext(self, labels, index=1):
+        """Set the tick labels
+
+        Parameters
+        ----------
+        labels : array-like
+
+        Returns
+        -------
+        Chart
+
+        """
+        self.layout['yaxis' + str(index)]['ticktext'] = labels
+        return self
+
     def xlim(self, low, high):
         """Set xaxis limits
 
@@ -437,6 +471,54 @@ class Chart(object):
                     td[k] = v
             listdata.append(td)
         return dict(data=listdata, layout=self.layout)
+
+
+
+
+def spark_shape(points, shapes, fill=None, color='blue', yindex=0, height=0.4):
+    """TODO: Docstring for spark.
+
+    Parameters
+    ----------
+    points : array-like
+    shapes : array-like
+    fill : array-like
+
+    Returns
+    -------
+    Chart
+
+    """
+    assert len(points) == len(shapes) + 1
+    data = [{'marker': {'color': 'white'},
+             'x': [points[0], points[-1]],
+             'y': [yindex, yindex]}]
+
+    if fill is None:
+        fill = [False] * len(shapes)
+
+    h2 = height / 2
+
+    lays = []
+    for i, s in enumerate(shapes):
+        if s is None:
+            continue
+        if fill[i]:
+            fillcolor = color
+        else:
+            fillcolor = 'white'
+        lays.append(
+            dict(type=s,
+                 x0=points[i], x1=points[i+1],
+                 y0=yindex - h2, y1=yindex + h2,
+                 xref='x', yref='y',
+                 fillcolor=fillcolor,
+                 line=dict(color=color))
+        )
+
+    layout = dict(shapes=lays)
+
+    return Chart(data=data, layout=layout)
 
 
 def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None):
@@ -953,6 +1035,55 @@ class PandasPlotting(object):
         for lab, (_, ser), (_, orig) in zip(label, cum.iteritems(), self._data.iteritems()):
             chart += line(x=ser.index, y=ser.values, label=lab,
                           fill='tonexty', mode=mode, text=orig.values, **kargs)
+        return chart
+
+    def sparklines(self, label=None, mode='lines', color='blue', percent=90, epsilon=1e-3):
+        """TODO: Docstring for sparklines.
+
+        Parameters
+        ----------
+        points : array-like
+        shapes : array-like
+        fill : array-like
+
+        Returns
+        -------
+        Chart
+
+        """
+        if label is None:
+            label = self._label
+        # data = [{'marker': {'color': 'white'},
+        #          'x': [points[0], points[-1]],
+        #          'y': [yindex, yindex]}]
+        #
+        div = self._data.max(axis=0) - self._data.min(axis=0) + epsilon
+        normed = (self._data - self._data.mean(axis=0)) / div * percent / 100.
+
+        normed += np.arange(self._data.shape[1])
+
+        # lays = []
+        # for i, s in enumerate(shapes):
+        #     if s is None:
+        #         continue
+        #     if fill[i]:
+        #         fillcolor = color
+        #     else:
+        #         fillcolor = 'white'
+        #     lays.append(
+        #         dict(type=s,
+        #              x0=points[i], x1=points[i+1],
+        #              y0=yindex - h2, y1=yindex + h2,
+        #              xref='x', yref='y',
+        #              fillcolor=fillcolor,
+        #              line=dict(color=color))
+        #     )
+        chart = line(x=self._data.index, y=normed)
+
+        chart.ytickvals(list(range(3)))
+        chart.yticktext(self._data.columns)
+        chart.legend(False)
+
         return chart
 
 
