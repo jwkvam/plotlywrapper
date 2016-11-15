@@ -500,15 +500,15 @@ def spark_shape(points, shapes, fill=None, color='blue', yindex=0, height=0.4):
     h2 = height / 2
 
     lays = []
-    for i, s in enumerate(shapes):
-        if s is None:
+    for i, shape in enumerate(shapes):
+        if shape is None:
             continue
         if fill[i]:
             fillcolor = color
         else:
             fillcolor = 'white'
         lays.append(
-            dict(type=s,
+            dict(type=shape,
                  x0=points[i], x1=points[i+1],
                  y0=yindex - h2, y1=yindex + h2,
                  xref='x', yref='y',
@@ -1037,7 +1037,7 @@ class PandasPlotting(object):
                           fill='tonexty', mode=mode, text=orig.values, **kargs)
         return chart
 
-    def sparklines(self, label=None, mode='lines', color='blue', percent=90, epsilon=1e-3):
+    def sparklines(self, label=None, mode='lines', percent=90, epsilon=1e-3):
         """TODO: Docstring for sparklines.
 
         Parameters
