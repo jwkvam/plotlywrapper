@@ -1056,10 +1056,11 @@ class PandasPlotting(object):
 
         div = self._data.max(axis=0) - self._data.min(axis=0) + epsilon
         normed = (self._data - self._data.mean(axis=0)) / div * percent / 100.
-        normed += np.arange(self._data.shape[1])
+        offset = np.arange(1, self._data.shape[1] + 1)
+        normed += offset
 
         chart = line(x=self._data.index, y=normed, mode=mode)
-        chart.ytickvals(list(range(3)))
+        chart.ytickvals(offset)
         chart.yticktext(self._data.columns)
         chart.legend(False)
         return chart
