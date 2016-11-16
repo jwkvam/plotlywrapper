@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.25-dev'
+__version__ = '0.0.25'
 
 
 def _recursive_dict(*args):
@@ -475,7 +475,7 @@ class Chart(object):
 
 
 
-def spark_shape(points, shapes, fill=None, color='blue', yindex=0, height=0.4):
+def spark_shape(points, shapes, fill=None, color='blue', width=5, yindex=0, heights=None):
     """TODO: Docstring for spark.
 
     Parameters
@@ -497,10 +497,11 @@ def spark_shape(points, shapes, fill=None, color='blue', yindex=0, height=0.4):
     if fill is None:
         fill = [False] * len(shapes)
 
-    h2 = height / 2
+    if heights is None:
+        heights = [0.4] * len(shapes)
 
     lays = []
-    for i, shape in enumerate(shapes):
+    for i, (shape, height) in enumerate(zip(shapes, heights)):
         if shape is None:
             continue
         if fill[i]:
@@ -510,10 +511,11 @@ def spark_shape(points, shapes, fill=None, color='blue', yindex=0, height=0.4):
         lays.append(
             dict(type=shape,
                  x0=points[i], x1=points[i+1],
-                 y0=yindex - h2, y1=yindex + h2,
+                 y0=yindex - height, y1=yindex + height,
                  xref='x', yref='y',
                  fillcolor=fillcolor,
-                 line=dict(color=color))
+                 line=dict(color=color,
+                           width=width))
         )
 
     layout = dict(shapes=lays)
@@ -1042,9 +1044,9 @@ class PandasPlotting(object):
 
         Parameters
         ----------
-        points : array-like
-        shapes : array-like
-        fill : array-like
+        label : array-like, optional
+        mode : str, optional
+        percent : number, optional
 
         Returns
         -------
@@ -1055,13 +1057,15 @@ class PandasPlotting(object):
             label = self._label
 
         div = self._data.max(axis=0) - self._data.min(axis=0) + epsilon
-        normed = (self._data - self._data.mean(axis=0)) / div * percent / 100.
+        center = div / 2. + self._data.min(axis=0)
+        normed = (self._data - center) / div
+        normed *= (percent / 100.)
         offset = np.arange(1, self._data.shape[1] + 1)
         normed += offset
 
-        chart = line(x=self._data.index, y=normed, mode=mode)
+        chart = line(x=self._data.index, y=normed, mode=mode, label=label)
         chart.ytickvals(offset)
-        chart.yticktext(self._data.columns)
+        chart.yticktext(self._data.columns.values)
         chart.legend(False)
         return chart
 
