@@ -130,6 +130,8 @@ heatmap
 
 .. autofunction:: plotlywrapper.heatmap
 
+Note: If using a single column Pandas DataFrame, entering ``z = df.values`` will result in an array of [[z1],[z2],[z3]...], which may result in a blank heatmap. Recommend converting to a pd.Series first (where ``.values`` should result in an array of shape [z1, z2, z3, ...]).
+
 **Examples**
 
 .. code-block:: python
