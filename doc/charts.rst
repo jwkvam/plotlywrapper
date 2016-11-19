@@ -130,7 +130,11 @@ heatmap
 
 .. autofunction:: plotlywrapper.heatmap
 
-Note: If z is 1D, then you must specify x and y as well. For example, taking a Pandas series, setting ``x = series.index.date`` and ``y = series.index.time``, then z needs to be 1D (e.g. ``z = series.values``) . This would plot an empty chart if using a Pandas dataframe, as ``df.values`` will result in an array of [[z1],[z2],[z3]...], which is not 1D.
+Note: If ``z`` is 1D, then you must specify ``x`` and ``y`` as well.
+For example, taking a Pandas series with a time index, setting ``x = series.index.date`` and ``y = series.index.time``,
+then z needs to be 1D (e.g. ``z = series.values``).
+This would plot an empty chart if using a Pandas DataFrame,
+as ``df.values`` will result in an array of [[z1],[z2],[z3]...], which is not 1D.
 
 **Examples**
 
