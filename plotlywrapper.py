@@ -901,19 +901,19 @@ def surface(x, y, z):
     return Chart(data=data)
 
 
-def hist(x, mode='overlay', label=None, opacity=None, horz=False, histnorm=" "):
+def hist(x, mode='overlay', label=None, opacity=None, horz=False, histnorm=None):
     """Histogram.
 
     Parameters
     ----------
-    x : array-like, optional
+    x : array-like
     mode : str, optional
     label : TODO, optional
     opacity : float, optional
     horz : bool, optional
-    histnorm : " ", "percent", "probability", "density", "probability density"
+    histnorm : None, "percent", "probability", "density", "probability density", optional
         Specifies the type of normalization used for this histogram trace.
-        If "", the span of each bar corresponds to the number of occurrences
+        If ``None``, the span of each bar corresponds to the number of occurrences
         (i.e. the number of data points lying inside the bins). If "percent",
         the span of each bar corresponds to the percentage of occurrences with
         respect to the total number of sample points (here, the sum of all bin
