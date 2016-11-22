@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.25'
+__version__ = '0.0.26-dev'
 
 
 def _recursive_dict(*args):
@@ -461,6 +461,8 @@ class Chart(object):
         return filename
 
     def to_json(self):
+        """ Deprecated.
+        """
         listdata = []
         for data in self.data:
             td = {}
@@ -472,7 +474,9 @@ class Chart(object):
             listdata.append(td)
         return dict(data=listdata, layout=self.layout)
 
-
+    @property
+    def dict(self):
+        return dict(data=self.data, layout=self.layout)
 
 
 def spark_shape(points, shapes, fill=None, color='blue', width=5, yindex=0, heights=None):
