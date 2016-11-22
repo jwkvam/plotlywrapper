@@ -912,7 +912,7 @@ def hist(x, mode='overlay', label=None, opacity=None, horz=False, histnorm=" "):
         Specifies the type of normalization used for this histogram trace.
         If "", the span of each bar corresponds to the number of occurrences
         (i.e. the number of data points lying inside the bins). If "percent",
-        the span of each bar corresponds to the percentage of occurrences with 
+        the span of each bar corresponds to the percentage of occurrences with
         respect to the total number of sample points (here, the sum of all bin
         area equals 100%). If "density", the span of each bar corresponds to the
         number of occurrences in a bin divided by the size of the bin interval
