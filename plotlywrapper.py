@@ -52,8 +52,6 @@ def _merge_layout(x, y):
     z = y.copy()
     if 'shapes' in z and 'shapes' in x:
         x['shapes'] += z['shapes']
-    # if 'yaxis' in z and 'yaxis' in x:
-    #     if 'tickvals'
     z.update(x)
     return z
 
