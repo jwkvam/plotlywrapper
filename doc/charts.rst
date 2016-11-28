@@ -145,6 +145,14 @@ as ``df.values`` will result in an array of [[z1],[z2],[z3]...], which is not 1D
 .. raw:: html
    :file: fig_heatmap.html
 
+.. code-block:: python
+
+    x = np.arange(5)
+    heatmap(z=np.arange(25), x=np.tile(x, 5), y=x.repeat(5))
+
+.. raw:: html
+   :file: fig_heatmap2.html
+
 3D
 --
 

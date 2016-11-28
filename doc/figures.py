@@ -33,6 +33,10 @@ def hist():
 def heatmap():
     pw.heatmap(np.arange(25).reshape(5, -1)).save('fig_heatmap.html', **options)
 
+def heatmap2():
+    x = np.arange(5)
+    pw.heatmap(z=np.arange(25), x=np.tile(x, 5), y=x.repeat(5)).save('fig_heatmap2.html', **options)
+
 def hist2d():
     pw.hist2d(np.sin(np.linspace(0, 2*np.pi, 100)),
               np.cos(np.linspace(0, 2*np.pi, 100))).save('fig_hist2d.html', **options)
@@ -64,3 +68,4 @@ if __name__ == "__main__":
     twin_axes()
     bubble()
     heatmap()
+    heatmap2()
