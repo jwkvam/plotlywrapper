@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.26'
+__version__ = '0.0.27-dev'
 
 
 def _recursive_dict(*args):
@@ -718,7 +718,7 @@ def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=No
 
 
 def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-            markersize=6, yaxis=1, fill=None, mode='markers'):
+            markersize=6, yaxis=1, fill=None, text="", mode='markers'):
     """Draws dots.
 
     Parameters
@@ -733,7 +733,7 @@ def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opaci
 
     """
     return line(x=x, y=y, label=label, color=color, width=width, dash=dash, opacity=opacity,
-                mode=mode, yaxis=yaxis, fill=fill, markersize=markersize)
+                mode=mode, yaxis=yaxis, fill=fill, text=text, markersize=markersize)
 
 
 def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
