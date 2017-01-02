@@ -28,3 +28,15 @@ Twin Axes
 
 .. raw:: html
    :file: fig_twinx.html
+
+Parallel Coordinates
+--------------------
+
+.. code-block:: python
+
+    df = pd.DataFrame([[1,3,2], [2,1,3]], columns=['alpha', 'beta', 'gamma'])
+    chart = df.T.plotly.line()
+    chart.legend(False)
+
+.. raw:: html
+   :file: fig_parallel.html

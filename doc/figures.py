@@ -3,6 +3,7 @@
 
 import plotlywrapper as pw
 import numpy as np
+import pandas as pd
 # from numpy import random as rng
 import random
 random.seed(0)
@@ -57,6 +58,12 @@ def bubble():
     chart = pw.scatter(data, markersize=np.arange(1, 6) * 10)
     chart.save('fig_bubble.html', **options)
 
+def parallel():
+    df = pd.DataFrame([[1,3,2], [2,1,3]], columns=['alpha', 'beta', 'gamma'])
+    chart = df.T.plotly.line()
+    chart.legend(False)
+    chart.save('fig_parallel.html', **options)
+
 if __name__ == "__main__":
     line()
     scatter()
@@ -69,3 +76,4 @@ if __name__ == "__main__":
     bubble()
     heatmap()
     heatmap2()
+    parallel()
