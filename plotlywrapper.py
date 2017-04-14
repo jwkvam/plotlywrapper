@@ -636,8 +636,8 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
                            fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))]
     if yaxis == 1:
         return Chart(data=data)
-    else:
-        return Chart(data=data, layout={'yaxis' + str(yaxis): dict(overlaying='y')})
+
+    return Chart(data=data, layout={'yaxis' + str(yaxis): dict(overlaying='y')})
 
 
 def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
@@ -775,9 +775,9 @@ def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
         data = [go.Bar(x=x, y=y, name=label, yaxis=yn, opacity=opacity)]
     if yaxis == 1:
         return Chart(data=data, layout={'barmode': mode})
-    else:
-        return Chart(data=data, layout={'barmode': mode,
-                                        'yaxis' + str(yaxis): dict(overlaying='y')})
+
+    return Chart(data=data, layout={'barmode': mode,
+                                    'yaxis' + str(yaxis): dict(overlaying='y')})
 
 
 def heatmap(z, x=None, y=None, colorscale='Viridis'):
