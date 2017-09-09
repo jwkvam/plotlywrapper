@@ -45,6 +45,12 @@ def _detect_notebook():
     except ImportError:
         return False
     kernel = get_ipython()
+    try:
+        from spyder.utils.ipython.spyder_kernel import SpyderKernel
+        if isinstance(kernel.kernel, SpyderKernel):
+            return False
+    except (ImportError, AttributeError):
+        pass
     return isinstance(kernel, zmqshell.ZMQInteractiveShell)
 
 
@@ -432,10 +438,23 @@ class Chart(object):
             self.show(filename=None, auto_open=False)
         return super(Chart, self).__repr__()
 
-    def show(self, filename=None, show_link=True, auto_open=True):
-        is_notebook = _detect_notebook()
+    def show(self, filename=None, show_link=True, auto_open=True, detect_notebook=True):
+        """Display the chart.
+
+        Parameters
+        ----------
+        filename : str, optional
+            Save plot to this filename, otherwise it's saved to a temporary file.
+        show_link : bool, optional
+            Show link to plotly.
+        auto_open : bool, optional
+            Automatically open the plot (in the browser).
+        detect_notebook : bool, optional
+            Try to detect if we're running in a notebook.
+
+        """
         kargs = {}
-        if is_notebook:
+        if detect_notebook and _detect_notebook():
             py.init_notebook_mode()
             plot = py.iplot
         else:
