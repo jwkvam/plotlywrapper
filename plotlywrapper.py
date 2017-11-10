@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.28'
+__version__ = '0.0.29-dev'
 
 
 def _recursive_dict(*args):
@@ -67,7 +67,7 @@ def _try_pydatetime(x):
     since plotly doesn't know how to handle them.
     """
     try:
-        x = x.to_pydatetime()
+        x = [y.isoformat() for y in x.to_pydatetime()]
     except AttributeError:
         pass
     return x
