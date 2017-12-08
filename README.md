@@ -62,6 +62,17 @@ Try out the interactive demo here,
 
 or view the [notebook](http://nbviewer.jupyter.org/github/jwkvam/plotlywrapper/blob/master/index.ipynb) statically.
 
+## JupyterLab
+
+Plotly doesn't render in JupyterLab by default.
+You need to install the JupyterLab Plotly extension.
+
+```
+jupyter labextension install @jupyterlab/plotly-extension
+```
+
+Developed in this [repo](https://github.com/jupyterlab/jupyter-renderers).
+
 ## Testing
 
 To test run
