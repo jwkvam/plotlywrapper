@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.29'
+__version__ = '0.0.30-dev'
 
 
 def _recursive_dict(*args):
@@ -63,11 +63,17 @@ def _merge_layout(x, y):
 
 
 def _try_pydatetime(x):
-    """Opportunistically try to convert to pandas time indexes
+    """Opportunistically try to convert to pandas objects to datetimes
     since plotly doesn't know how to handle them.
     """
     try:
+        # for datetimeindex
         x = [y.isoformat() for y in x.to_pydatetime()]
+    except AttributeError:
+        pass
+    try:
+        # for generic series
+        x = [y.isoformat() for y in x.dt.to_pydatetime()]
     except AttributeError:
         pass
     return x
@@ -608,7 +614,7 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
          mode='lines+markers', yaxis=1, fill=None, text="",
-         markersize=6):
+         markersize=6, gl=False):
     """Draws connected dots.
 
     Parameters
@@ -641,17 +647,21 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     assert x.shape[0] == y.shape[0]
+    if gl:
+        glo = go.Scattergl
+    else:
+        glo = go.Scatter
     if y.ndim == 2:
         if not hasattr(label, '__iter__'):
             if label is None:
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode, text=text,
+        data = [glo(x=x, y=yy, name=ll, line=lineattr, mode=mode, text=text,
                            fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))
                 for ll, yy in zip(label, y.T)]
     else:
-        data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode, text=text,
+        data = [glo(x=x, y=y, name=label, line=lineattr, mode=mode, text=text,
                            fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))]
     if yaxis == 1:
         return Chart(data=data)
