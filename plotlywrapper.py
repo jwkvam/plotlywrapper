@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.29'
+__version__ = '0.0.30-dev'
 
 
 def _recursive_dict(*args):
@@ -63,11 +63,17 @@ def _merge_layout(x, y):
 
 
 def _try_pydatetime(x):
-    """Opportunistically try to convert to pandas time indexes
+    """Opportunistically try to convert to pandas objects to datetimes
     since plotly doesn't know how to handle them.
     """
     try:
+        # for datetimeindex
         x = [y.isoformat() for y in x.to_pydatetime()]
+    except AttributeError:
+        pass
+    try:
+        # for generic series
+        x = [y.isoformat() for y in x.dt.to_pydatetime()]
     except AttributeError:
         pass
     return x
