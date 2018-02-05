@@ -614,7 +614,7 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
 
 def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
          mode='lines+markers', yaxis=1, fill=None, text="",
-         markersize=6, gl=False):
+         markersize=6):
     """Draws connected dots.
 
     Parameters
@@ -647,21 +647,17 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     assert x.shape[0] == y.shape[0]
-    if gl:
-        glo = go.Scattergl
-    else:
-        glo = go.Scatter
     if y.ndim == 2:
         if not hasattr(label, '__iter__'):
             if label is None:
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [glo(x=x, y=yy, name=ll, line=lineattr, mode=mode, text=text,
+        data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode, text=text,
                            fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))
                 for ll, yy in zip(label, y.T)]
     else:
-        data = [glo(x=x, y=y, name=label, line=lineattr, mode=mode, text=text,
+        data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode, text=text,
                            fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))]
     if yaxis == 1:
         return Chart(data=data)
