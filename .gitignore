@@ -1,6 +1,7 @@
 _build
 *.html
 tags
+.gutctags
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
