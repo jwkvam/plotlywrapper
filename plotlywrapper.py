@@ -1,12 +1,6 @@
-"""plotly wrapper to make easy plots easy to make"""
-
-from __future__ import division
+"""Plotlywrapper: to make easy plots easy to make."""
 
 from tempfile import NamedTemporaryFile
-from collections import defaultdict
-
-# pylint: disable=redefined-builtin
-from builtins import zip
 
 import plotly.offline as py
 import plotly.graph_objs as go
