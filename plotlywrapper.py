@@ -983,6 +983,41 @@ def hist2d(x, y, label=None, opacity=None):
     return Chart(data=data)
 
 
+def scattergeo(latitude, longitude, size=1, text=None, location='USA-states'):
+    """TODO: Docstring for map.
+
+    Parameters
+    ----------
+    locations : TODO
+    type : TODO, optional
+    locationmode : TODO, optional
+
+    Returns
+    -------
+    TODO
+
+    """
+    data = go.Scattergeo(
+        locationmode=location,
+        lon=longitude,
+        lat=latitude,
+        text=text,
+        mode='markers',
+        marker=dict(
+            size=size,
+            line=dict(width=1)
+        )
+    )
+    layout = dict(
+        geo=dict(
+            scope='usa',
+            projection=dict(type='albers usa'),
+            showland=True
+        )
+    )
+    return Chart(data=[data], layout=layout)
+
+
 class PandasPlotting(object):
     """
     These plotting tools can be accessed through dataframe instance
