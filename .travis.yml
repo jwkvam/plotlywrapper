@@ -28,6 +28,14 @@ install:
   - source activate test-environment
   - pip install -U pip
   - pip install --progress-bar=off -r test-requirements.txt
+  - # places the numpy stubs inside a stubs folder for mypy
+  - rm -rf stubs
+  - curl -LO https://github.com/numpy/numpy-stubs/archive/master.zip
+  - unzip master.zip
+  - mkdir -p stubs
+  - mv numpy-stubs-master/numpy-stubs stubs/numpy
+  - rm -rf numpy-stubs-master master.zip
+
 
 script:
     - make test
