@@ -4,7 +4,7 @@ from tempfile import NamedTemporaryFile
 
 import plotly.offline as py
 import plotly.graph_objs as go
-from plotly.basedatatypes import BaseTraceType
+from plotly.basedatatypes import BaseTraceType  # pylint: disable=no-name-in-module
 
 import numpy as np
 import pandas as pd
@@ -469,7 +469,6 @@ class Chart(go.Figure):
     def save(self, filename=None, show_link=True, auto_open=False, output='file', plotlyjs=True):
         if filename is None:
             filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
-        # self._figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         # NOTE: this doesn't work for output 'div'
         py.plot(
             self,
@@ -1077,6 +1076,8 @@ def hist2d(x, y, label=None, opacity=None):
     return Chart(data=data)
 
 
+@pd.api.extensions.register_dataframe_accessor('plotly')
+@pd.api.extensions.register_series_accessor('plotly')
 class PandasPlotting:
     """
     These plotting tools can be accessed through dataframe instance
@@ -1242,30 +1243,3 @@ class PandasPlotting:
         chart.yticktext(self._data.columns.values)
         chart.legend(False)
         return chart
-
-
-# pylint: disable=too-few-public-methods
-class _AccessorProperty:
-    """Descriptor for implementing accessor properties.
-    Borrowed from pandas.
-    """
-
-    def __init__(self, accessor_cls, construct_accessor):
-        self.accessor_cls = accessor_cls
-        self.construct_accessor = construct_accessor
-        self.__doc__ = accessor_cls.__doc__
-
-    def __get__(self, instance, owner=None):
-        if instance is None:
-            return self.accessor_cls
-        return self.construct_accessor(instance)
-
-    def __set__(self, instance, value):
-        raise AttributeError("can't set attribute")
-
-    def __delete__(self, instance):
-        raise AttributeError("can't delete attribute")
-
-
-pd.DataFrame.plotly = _AccessorProperty(PandasPlotting, PandasPlotting)
-pd.Series.plotly = _AccessorProperty(PandasPlotting, PandasPlotting)
