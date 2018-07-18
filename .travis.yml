@@ -37,7 +37,7 @@ install:
 
 script:
   - if [ $PYTHON_VERSION == "3.6" ]; then
-    pip install -U black
+    pip install -U black;
     make black_check;
     fi
   - make test
