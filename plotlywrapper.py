@@ -1,10 +1,12 @@
 """Plotlywrapper: to make easy plots easy to make."""
 
+from typing import Generator, Optional
+
 from tempfile import NamedTemporaryFile
 
 import plotly.offline as py
 import plotly.graph_objs as go
-from plotly.basedatatypes import BaseTraceType  # pylint: disable=no-name-in-module
+from plotly.basedatatypes import BaseTraceType  # pylint: disable=no-name-in-module,import-error
 
 import numpy as np
 import pandas as pd
@@ -13,21 +15,23 @@ import pandas as pd
 __version__ = '0.1.0-dev'
 
 
-def _labels(base='trace'):
+def _labels(base='trace') -> Generator[str, None, None]:
     i = 0
     while True:
         yield base + ' ' + str(i)
         i += 1
 
 
-def _detect_notebook():
-    """
+def _detect_notebook() -> bool:
+    """Detect if code is running in a Jupyter Notebook.
+
     This isn't 100% correct but seems good enough
 
     Returns
     -------
     bool
         True if it detects this is a notebook, otherwise False.
+
     """
     try:
         from IPython import get_ipython
@@ -45,7 +49,8 @@ def _detect_notebook():
     return isinstance(kernel, zmqshell.ZMQInteractiveShell)
 
 
-def _merge_layout(x, y):
+def _merge_layout(x: go.Layout, y: go.Layout) -> go.Layout:
+    """Merge attributes from two layouts."""
     xjson = x.to_plotly_json()
     yjson = y.to_plotly_json()
     if 'shapes' in yjson and 'shapes' in xjson:
@@ -55,8 +60,9 @@ def _merge_layout(x, y):
 
 
 def _try_pydatetime(x):
-    """Opportunistically try to convert to pandas objects to datetimes
-    since plotly doesn't know how to handle them.
+    """Try to convert to pandas objects to datetimes.
+
+    Plotly doesn't know how to handle them.
     """
     try:
         # for datetimeindex
@@ -72,83 +78,71 @@ def _try_pydatetime(x):
 
 
 class Chart(go.Figure):
-    """Plotly chart base class, usually this object will get created
-    by from a function.
+    """Plotly chart base class.
+
+    Usually this object will get created by from a function.
     """
 
     def __init__(self, data=None, layout=None, repr_plot=True):
+        """Create a chart."""
         super().__init__(data=data, layout=layout)
         self._repr_plot = repr_plot
 
     def __add__(self, other):
+        """Add another chart or plot type to this chart."""
         if isinstance(other, Chart):
             self.add_traces(other.data)
             self.layout = _merge_layout(self.layout, other.layout)
         elif isinstance(other, BaseTraceType):
             self.add_trace(other)
+        elif isinstance(other, go.Layout):
+            self.layout = _merge_layout(self.layout, other)
         else:
             raise ValueError('Cannot add {} to Chart'.format(other))
         return self
 
     def __radd__(self, other):
+        """Add another chart or plot type to this chart."""
         return self.__add__(other)
 
     @property
     def width(self):
-        """Sets the width of the plot in pixels.
-
-        Parameters
-        ----------
-        value : int
-            Width of the plot in pixels.
-
-        Returns
-        -------
-        Chart
-
-        """
+        """Width of the chart in pixels."""
         return self.layout.width
 
     @width.setter
     def width(self, value):
         self.layout.width = value
 
+    @property
     def height(self, value):
-        """Sets the height of the plot in pixels.
+        """Height of the chart in pixels."""
+        return self.layout.height
 
-        Parameters
-        ----------
-        value : int
-            Height of the plot in pixels.
-
-        Returns
-        -------
-        Chart
-
-        """
-        self.layout['height'] = value
-        return self
+    @height.setter
+    def height(self, value):
+        self.layout.height = value
 
     def group(self):
-        """Sets bar graph display mode to "grouped".
+        """Set bar graph display mode to "grouped".
 
         Returns
         -------
         Chart
 
         """
-        self.layout['barmode'] = 'group'
+        self.layout.barmode = 'group'
         return self
 
     def stack(self):
-        """Sets bar graph display mode to "stacked".
+        """Set bar graph display mode to "stacked".
 
         Returns
         -------
         Chart
 
         """
-        self.layout['barmode'] = 'stack'
+        self.layout.barmode = 'stack'
         return self
 
     def legend(self, visible=True):
@@ -163,27 +157,20 @@ class Chart(go.Figure):
         Chart
 
         """
-        self.layout['showlegend'] = visible
+        self.layout.showlegend = visible
         return self
 
+    @property
+    def xlabel(self):
+        """Xaxis Label."""
+        return self.layout.xaxis.title
+
+    @xlabel.setter
     def xlabel(self, label):
-        """Sets the x-axis title.
-
-        Parameters
-        ----------
-        value : str
-            Label for the x-axis
-
-        Returns
-        -------
-        Chart
-
-        """
-        self.layout['xaxis']['title'] = label
-        return self
+        self.layout.xaxis.title = label
 
     def ylabel(self, label, index=1):
-        """Sets the y-axis title.
+        """Set the y-axis title.
 
         Parameters
         ----------
@@ -200,24 +187,17 @@ class Chart(go.Figure):
         self.layout['yaxis' + str(index)]['title'] = label
         return self
 
+    @property
+    def zlabel(self):
+        """Zaxis Label."""
+        return self.layout.zaxis.title
+
+    @zlabel.setter
     def zlabel(self, label):
-        """Sets the z-axis title.
-
-        Parameters
-        ----------
-        value : str
-            Label for the z-axis
-
-        Returns
-        -------
-        Chart
-
-        """
-        self.layout['zaxis']['title'] = label
-        return self
+        self.layout.zaxis.title = label
 
     def xtickangle(self, angle):
-        """Sets the angle of the x-axis tick labels.
+        """Set the angle of the x-axis tick labels.
 
         Parameters
         ----------
@@ -233,7 +213,7 @@ class Chart(go.Figure):
         return self
 
     def ytickangle(self, angle, index=1):
-        """Sets the angle of the y-axis tick labels.
+        """Set the angle of the y-axis tick labels.
 
         Parameters
         ----------
@@ -251,7 +231,7 @@ class Chart(go.Figure):
         return self
 
     def xlabelsize(self, size):
-        """Set the size of the label
+        """Set the size of the label.
 
         Parameters
         ----------
@@ -266,7 +246,7 @@ class Chart(go.Figure):
         return self
 
     def ylabelsize(self, size, index=1):
-        """Set the size of the label
+        """Set the size of the label.
 
         Parameters
         ----------
@@ -281,7 +261,7 @@ class Chart(go.Figure):
         return self
 
     def xticksize(self, size):
-        """Set the tick font size
+        """Set the tick font size.
 
         Parameters
         ----------
@@ -296,7 +276,7 @@ class Chart(go.Figure):
         return self
 
     def yticksize(self, size, index=1):
-        """Set the tick font size
+        """Set the tick font size.
 
         Parameters
         ----------
@@ -311,7 +291,7 @@ class Chart(go.Figure):
         return self
 
     def ytickvals(self, values, index=1):
-        """Set the tick values
+        """Set the tick values.
 
         Parameters
         ----------
@@ -326,7 +306,7 @@ class Chart(go.Figure):
         return self
 
     def yticktext(self, labels, index=1):
-        """Set the tick labels
+        """Set the tick labels.
 
         Parameters
         ----------
@@ -341,7 +321,7 @@ class Chart(go.Figure):
         return self
 
     def xlim(self, low, high):
-        """Set xaxis limits
+        """Set xaxis limits.
 
         Parameters
         ----------
@@ -357,7 +337,7 @@ class Chart(go.Figure):
         return self
 
     def ylim(self, low, high, index=1):
-        """Set yaxis limits
+        """Set yaxis limits.
 
         Parameters
         ----------
@@ -374,23 +354,27 @@ class Chart(go.Figure):
         return self
 
     def xdtick(self, dtick):
-        self.layout['xaxis']['dtick'] = dtick
+        """Set the tick distance."""
+        self.layout.xaxis.dtick = dtick
         return self
 
     def ydtick(self, dtick, index=1):
+        """Set the tick distance."""
         self.layout['yaxis' + str(index)]['dtick'] = dtick
         return self
 
     def xnticks(self, nticks):
-        self.layout['xaxis']['nticks'] = nticks
+        """Set the number of ticks."""
+        self.layout.xaxis.nticks = nticks
         return self
 
     def ynticks(self, nticks, index=1):
+        """Set the number of ticks."""
         self.layout['yaxis' + str(index)]['nticks'] = nticks
         return self
 
     def yaxis_left(self, index=1):
-        """Puts the yaxis on the left hand side
+        """Put the yaxis on the left hand side.
 
         Parameters
         ----------
@@ -404,7 +388,7 @@ class Chart(go.Figure):
         self.layout['yaxis' + str(index)]['side'] = 'left'
 
     def yaxis_right(self, index=1):
-        """Puts the yaxis on the right hand side
+        """Put the yaxis on the right hand side.
 
         Parameters
         ----------
@@ -417,22 +401,17 @@ class Chart(go.Figure):
         """
         self.layout['yaxis' + str(index)]['side'] = 'right'
 
-    def title(self, string):
-        """Sets the title of the plot
+    @property
+    def title(self) -> str:
+        """Title of the chart."""
+        return self.layout.title
 
-        Parameters
-        ----------
-        string : str
-
-        Returns
-        -------
-        Chart
-
-        """
-        self.layout['title'] = string
-        return self
+    @title.setter
+    def title(self, string: str) -> None:
+        self.layout.title = string
 
     def __repr__(self):
+        """Show the chart."""
         if self._repr_plot:
             self.show(filename=None, auto_open=False)
         return super().__repr__()
@@ -466,7 +445,15 @@ class Chart(go.Figure):
         # self._figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(self, show_link=show_link, **kargs)
 
-    def save(self, filename=None, show_link=True, auto_open=False, output='file', plotlyjs=True):
+    def save(
+        self,
+        filename: Optional[str] = None,
+        show_link: bool = True,
+        auto_open: bool = False,
+        output: str = 'file',
+        plotlyjs: bool = True,
+    ) -> str:
+        """Save the chart to an html file."""
         if filename is None:
             filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
         # NOTE: this doesn't work for output 'div'
@@ -482,6 +469,7 @@ class Chart(go.Figure):
 
     @property
     def dict(self):
+        """Convert Chart to a dict."""
         return self.to_dict()
 
 
@@ -684,6 +672,7 @@ def line(
 def line3d(
     x, y, z, label=None, color=None, width=None, dash=None, opacity=None, mode='lines+markers'
 ):
+    """Create a 3d line chart."""
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     z = np.atleast_1d(z)
@@ -712,7 +701,7 @@ def line3d(
 
 
 def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None, mode='markers'):
-    """3D Scatter Plot
+    """Create a 3D scatter Plot.
 
     Parameters
     ----------
@@ -802,7 +791,7 @@ def scatter(
 
 
 def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
-    """Create a bar chart
+    """Create a bar chart.
 
     Parameters
     ----------
@@ -845,7 +834,7 @@ def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
 
 
 def heatmap(z, x=None, y=None, colorscale='Viridis'):
-    """Create a heatmap
+    """Create a heatmap.
 
     Parameters
     ----------
@@ -915,7 +904,7 @@ def fill_between(
     mode='lines+markers',
     **kargs
 ):
-    """Fill between `ylow` and `yhigh`
+    """Fill between `ylow` and `yhigh`.
 
     Parameters
     ----------
@@ -1079,9 +1068,7 @@ def hist2d(x, y, label=None, opacity=None):
 @pd.api.extensions.register_dataframe_accessor('plotly')
 @pd.api.extensions.register_series_accessor('plotly')
 class PandasPlotting:
-    """
-    These plotting tools can be accessed through dataframe instance
-    accessor `.plotly`.
+    """Pandas plotly charting methods.
 
     Examples
     --------
@@ -1094,6 +1081,7 @@ class PandasPlotting:
     """
 
     def __init__(self, data):
+        """Create the pandas accessor."""
         self._data = data
         if isinstance(data, pd.DataFrame):
             self._label = data.columns
@@ -1111,6 +1099,7 @@ class PandasPlotting:
         fill=None,
         **kargs
     ):
+        """Create a line chart."""
         if label is None:
             label = self._label
         return line(
@@ -1129,7 +1118,7 @@ class PandasPlotting:
     def scatter(
         self, label=None, color=None, width=None, dash=None, opacity=None, mode='markers', **kargs
     ):
-        """Creates a bar chart.
+        """Create a bar chart.
 
         Parameters
         ----------
@@ -1157,7 +1146,7 @@ class PandasPlotting:
         )
 
     def bar(self, label=None, mode='group', opacity=None, **kargs):
-        """Creates a bar chart.
+        """Create a bar chart.
 
         Parameters
         ----------
@@ -1183,7 +1172,7 @@ class PandasPlotting:
         )
 
     def stack(self, mode='lines', label=None, **kargs):
-        """Creates a stacked area plot.
+        """Create a stacked area plot.
 
         Parameters
         ----------
