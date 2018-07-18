@@ -110,11 +110,7 @@ def test_one():
     plot.show(auto_open=False)
 
     expect = {
-        'layout': {
-            'barmode': 'stack',
-            'xaxis': {'title': 'x axis'},
-            'yaxis': {'title': 'y label'},
-        },
+        'layout': {'barmode': 'stack', 'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}},
         'data': [
             {
                 'y': np.array([20, 14, 23]),
@@ -123,12 +119,7 @@ def test_one():
                 'yaxis': 'y',
                 'name': 'new york',
             },
-            {
-                'y': np.array([12, 18, 29]),
-                'x': np.array([0, 1, 2]),
-                'type': 'bar',
-                'yaxis': 'y',
-            },
+            {'y': np.array([12, 18, 29]), 'x': np.array([0, 1, 2]), 'type': 'bar', 'yaxis': 'y'},
             {
                 'y': np.array([3, 8, 9]),
                 'x': np.array([0, 1, 2]),
