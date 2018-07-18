@@ -10,18 +10,13 @@ from builtins import zip
 
 import plotly.offline as py
 import plotly.graph_objs as go
-from plotly.basedatatypes import BaseFigure
+from plotly.basedatatypes import BaseTraceType
 
 import numpy as np
 import pandas as pd
 
 
 __version__ = '0.1.0-dev'
-
-
-def _recursive_dict(*args):
-    recursive_factory = lambda: defaultdict(recursive_factory)
-    return defaultdict(recursive_factory, *args)
 
 
 def _labels(base='trace'):
@@ -57,11 +52,12 @@ def _detect_notebook():
 
 
 def _merge_layout(x, y):
-    z = y.copy()
-    if 'shapes' in z and 'shapes' in x:
-        x['shapes'] += z['shapes']
-    z.update(x)
-    return z
+    xjson = x.to_plotly_json()
+    yjson = y.to_plotly_json()
+    if 'shapes' in yjson and 'shapes' in xjson:
+        xjson['shapes'] += yjson['shapes']
+    yjson.update(xjson)
+    return go.Layout(yjson)
 
 
 def _try_pydatetime(x):
@@ -81,33 +77,30 @@ def _try_pydatetime(x):
     return x
 
 
-class Chart(BaseFigure):
-    """
-    Plotly chart base class, usually this object will get created
+class Chart(go.Figure):
+    """Plotly chart base class, usually this object will get created
     by from a function.
     """
 
     def __init__(self, data=None, layout=None, repr_plot=True):
-        super().__init__(data=data, layout_plotly=layout)
-        self.repr_plot = repr_plot
-        # self.data = data
-        # if data is None:
-        #     self.data = []
-        # self.layout = layout
-        # if layout is None:
-        #     layout = {}
-        # self.layout = _recursive_dict(layout)
-        self.figure_ = None
+        super().__init__(data=data, layout=layout)
+        self._repr_plot = repr_plot
 
     def __add__(self, other):
-        self.data += other.data
-        self.layout = _merge_layout(self.layout, other.layout)
+        if isinstance(other, Chart):
+            self.add_traces(other.data)
+            self.layout = _merge_layout(self.layout, other.layout)
+        elif isinstance(other, BaseTraceType):
+            self.add_trace(other)
+        else:
+            raise ValueError('Cannot add {} to Chart'.format(other))
         return self
 
     def __radd__(self, other):
         return self.__add__(other)
 
-    def width(self, value):
+    @property
+    def width(self):
         """Sets the width of the plot in pixels.
 
         Parameters
@@ -120,8 +113,11 @@ class Chart(BaseFigure):
         Chart
 
         """
-        self.layout['width'] = value
-        return self
+        return self.layout.width
+
+    @width.setter
+    def width(self, value):
+        self.layout.width = value
 
     def height(self, value):
         """Sets the height of the plot in pixels.
@@ -443,9 +439,9 @@ class Chart(BaseFigure):
         return self
 
     def __repr__(self):
-        if self.repr_plot:
+        if self._repr_plot:
             self.show(filename=None, auto_open=False)
-        return super(Chart, self).__repr__()
+        return super().__repr__()
 
     def show(self, filename=None, show_link=True, auto_open=True, detect_notebook=True):
         """Display the chart.
@@ -473,16 +469,16 @@ class Chart(BaseFigure):
             kargs['filename'] = filename
             kargs['auto_open'] = auto_open
 
-        self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
-        plot(self.figure_, show_link=show_link, **kargs)
+        # self._figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
+        plot(self, show_link=show_link, **kargs)
 
     def save(self, filename=None, show_link=True, auto_open=False, output='file', plotlyjs=True):
         if filename is None:
             filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
-        self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
+        # self._figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         # NOTE: this doesn't work for output 'div'
         py.plot(
-            self.figure_,
+            self,
             show_link=show_link,
             filename=filename,
             auto_open=auto_open,
@@ -493,7 +489,7 @@ class Chart(BaseFigure):
 
     @property
     def dict(self):
-        return dict(data=self.data, layout=self.layout)
+        return self.to_dict()
 
 
 def spark_shape(points, shapes, fill=None, color='blue', width=5, yindex=0, heights=None):

@@ -1,49 +1,33 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# pylint: disable=redefined-builtin
-from builtins import str
+from typing import Any
+import json
 
 import numpy as np
 from numpy import random as rng
+from datetime import datetime, time, date
 import pandas as pd
 import pytest
 
 import plotlywrapper as pw
 
 
-def json_conversion(obj: Any) -> JSON:
+def json_conversion(obj):
     """Encode additional objects to JSON."""
 
-    try:
-    except AttributeError:
-        pass
+    if isinstance(obj, (np.ndarray, np.generic)):
+        return obj.tolist()
 
-
-    try:
-        # numpy isn't an explicit dependency of bowtie
-        # so we can't assume it's available
-        import numpy as np
-        if isinstance(obj, (np.ndarray, np.generic)):
+    if isinstance(obj, pd.DatetimeIndex):
+        return [x.isoformat() for x in obj.to_pydatetime()]
+    if isinstance(obj, pd.Index):
+        return obj.tolist()
+    if isinstance(obj, pd.Series):
+        try:
+            return [x.isoformat() for x in obj.dt.to_pydatetime()]
+        except AttributeError:
             return obj.tolist()
-    except ImportError:
-        pass
-
-    try:
-        # pandas isn't an explicit dependency of bowtie
-        # so we can't assume it's available
-        import pandas as pd
-        if isinstance(obj, pd.DatetimeIndex):
-            return [x.isoformat() for x in obj.to_pydatetime()]
-        if isinstance(obj, pd.Index):
-            return obj.tolist()
-        if isinstance(obj, pd.Series):
-            try:
-                return [x.isoformat() for x in obj.dt.to_pydatetime()]
-            except AttributeError:
-                return obj.tolist()
-    except ImportError:
-        pass
 
     if isinstance(obj, (datetime, time, date)):
         return obj.isoformat()
@@ -51,18 +35,17 @@ def json_conversion(obj: Any) -> JSON:
 
 
 def compare_figs(d1, d2):
-    try:
-        d1 = d1.to_plotly_json()
-    except AttributeError:
-        pass
-    try:
-        d2 = d2.to_plotly_json()
-    except AttributeError:
-        pass
+    d1 = json.loads(json.dumps(d1, default=json_conversion))
+    d2 = json.loads(json.dumps(d2, default=json_conversion))
+    _compare_figs(d1, d2)
 
+
+def _compare_figs(d1, d2):
     assert isinstance(d1, dict)
     assert isinstance(d2, dict)
     for k in set(d1.keys()).union(set(d2.keys())):
+        if k == 'uid':
+            continue
         assert k in d1
         assert k in d2
         if isinstance(d1[k], dict):
@@ -100,17 +83,13 @@ def test_dict():
         'layout': {},
         'data': [
             {
-                'opacity': None,
-                'name': None,
                 'mode': 'lines+markers',
                 'marker': dict(size=6),
                 'text': "",
                 'y': [0, 1, 2],
                 'x': [0, 1, 2],
-                'line': {},
-                'yaxis': 'y1',
+                'yaxis': 'y',
                 'type': 'scatter',
-                'fill': None,
             }
         ],
     }
@@ -134,24 +113,21 @@ def test_one():
         'layout': {
             'barmode': 'stack',
             'xaxis': {'title': 'x axis'},
-            'yaxis1': {'title': 'y label'},
+            'yaxis': {'title': 'y label'},
         },
         'data': [
             {
                 'y': np.array([20, 14, 23]),
                 'x': np.array([0, 1, 2]),
-                'opacity': None,
                 'type': 'bar',
-                'yaxis': 'y1',
+                'yaxis': 'y',
                 'name': 'new york',
             },
             {
                 'y': np.array([12, 18, 29]),
                 'x': np.array([0, 1, 2]),
                 'type': 'bar',
-                'opacity': None,
-                'yaxis': 'y1',
-                'name': None,
+                'yaxis': 'y',
             },
             {
                 'y': np.array([3, 8, 9]),
@@ -159,22 +135,20 @@ def test_one():
                 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                 'type': 'scatter',
                 'marker': dict(size=6),
-                'fill': None,
-                'yaxis': 'y1',
+                'yaxis': 'y',
                 'text': "",
                 'mode': 'lines+markers',
-                'opacity': None,
                 'name': 'hello',
             },
         ],
     }
 
-    compare_figs(plot.figure_, expect)
+    compare_figs(plot.dict, expect)
 
 
 def test_two():
     expect = {
-        'layout': {'xaxis': {'title': 'x axis'}, 'yaxis1': {'title': 'y label'}},
+        'layout': {'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}},
         'data': [
             {
                 'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
@@ -182,11 +156,9 @@ def test_two():
                 'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
                 'marker': dict(size=6),
                 'type': 'scatter',
-                'fill': None,
                 'text': "",
-                'yaxis': 'y1',
+                'yaxis': 'y',
                 'mode': 'lines+markers',
-                'opacity': None,
                 'name': 'hello',
             }
         ],
@@ -204,8 +176,8 @@ def test_two():
     line1.ylabel('y label')
     line1.show(auto_open=False)
 
-    compare_figs(line0.figure_, line1.figure_)
-    compare_figs(line0.figure_, expect)
+    compare_figs(line0.dict, line1.dict)
+    compare_figs(line0.dict, expect)
 
 
 def test_dataframe_lines():
@@ -220,7 +192,7 @@ def test_dataframe_lines():
     p2 = pw.line(x, y, columns)
     p2.show(auto_open=False)
 
-    compare_figs(p1.figure_, p2.figure_)
+    compare_figs(p1.dict, p2.dict)
 
 
 def test_dataframe_bar():
@@ -235,4 +207,4 @@ def test_dataframe_bar():
     p2 = pw.bar(x, y, columns)
     p2.show(auto_open=False)
 
-    compare_figs(p1.figure_, p2.figure_)
+    compare_figs(p1.dict, p2.dict)

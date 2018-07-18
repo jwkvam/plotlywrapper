@@ -1,5 +1,4 @@
 codecov
-future
 ipykernel
 ipython
 numpy
@@ -7,5 +6,7 @@ pandas
 plotly
 pylint
 pytest
+pytest-codestyle
 pytest-cov
+pytest-docstyle
 pytest-pylint

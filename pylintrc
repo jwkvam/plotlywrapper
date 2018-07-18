@@ -60,7 +60,7 @@ confidence=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 # TODO remove missing-docstring
-disable=no-member,missing-docstring,locally-disabled
+disable=no-member,bad-continuation
 # disable=metaclass-assignment,using-cmp-argument,execfile-builtin,standarderror-builtin,buffer-builtin,delslice-method,hex-method,dict-view-method,unicode-builtin,basestring-builtin,coerce-builtin,filter-builtin-not-iterating,old-ne-operator,reload-builtin,setslice-method,raising-string,backtick,round-builtin,next-method-called,raw_input-builtin,apply-builtin,reduce-builtin,coerce-method,long-suffix,parameter-unpacking,getslice-method,oct-method,map-builtin-not-iterating,input-builtin,no-absolute-import,nonzero-method,dict-iter-method,file-builtin,long-builtin,xrange-builtin,cmp-builtin,old-raise-syntax,useless-suppression,print-statement,indexing-exception,old-division,suppressed-message,range-builtin-not-iterating,intern-builtin,import-star-module-level,old-octal-literal,cmp-method,zip-builtin-not-iterating,unichr-builtin,unpacking-in-except
 
 
@@ -77,7 +77,7 @@ output-format=text
 files-output=no
 
 # Tells whether to display a full report or only the messages
-reports=yes
+reports=no
 
 # Python expression which should return a note less than 10 (10 is the highest
 # note). You have access to the variables errors warning, statement which
