@@ -35,9 +35,11 @@ install:
   - mv numpy-stubs-master/numpy-stubs stubs/numpy
   - rm -rf numpy-stubs-master master.zip
 
-
 script:
-    - make test
+  - if [ $PYTHON_VERSION == "3.6" ]; then
+    make black_check;
+    fi
+  - make test
 
 after_success:
-    - codecov
+  - codecov

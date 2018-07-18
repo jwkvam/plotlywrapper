@@ -2,6 +2,8 @@ all: test
 
 test:
 	py.test --cov=./ --docstyle --codestyle --pylint --pylint-rcfile=pylintrc --pylint-error-types=WCREF --ignore=doc
+
+black_check:
 	black -S -l 100 --check *.py 
 
 lint:

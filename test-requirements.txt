@@ -1,4 +1,3 @@
-black
 codecov
 ipykernel
 ipython
