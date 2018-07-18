@@ -12,7 +12,54 @@ import pytest
 import plotlywrapper as pw
 
 
+def json_conversion(obj: Any) -> JSON:
+    """Encode additional objects to JSON."""
+
+    try:
+    except AttributeError:
+        pass
+
+
+    try:
+        # numpy isn't an explicit dependency of bowtie
+        # so we can't assume it's available
+        import numpy as np
+        if isinstance(obj, (np.ndarray, np.generic)):
+            return obj.tolist()
+    except ImportError:
+        pass
+
+    try:
+        # pandas isn't an explicit dependency of bowtie
+        # so we can't assume it's available
+        import pandas as pd
+        if isinstance(obj, pd.DatetimeIndex):
+            return [x.isoformat() for x in obj.to_pydatetime()]
+        if isinstance(obj, pd.Index):
+            return obj.tolist()
+        if isinstance(obj, pd.Series):
+            try:
+                return [x.isoformat() for x in obj.dt.to_pydatetime()]
+            except AttributeError:
+                return obj.tolist()
+    except ImportError:
+        pass
+
+    if isinstance(obj, (datetime, time, date)):
+        return obj.isoformat()
+    raise TypeError('Not sure how to serialize {} of type {}'.format(obj, type(obj)))
+
+
 def compare_figs(d1, d2):
+    try:
+        d1 = d1.to_plotly_json()
+    except AttributeError:
+        pass
+    try:
+        d2 = d2.to_plotly_json()
+    except AttributeError:
+        pass
+
     assert isinstance(d1, dict)
     assert isinstance(d2, dict)
     for k in set(d1.keys()).union(set(d2.keys())):
@@ -47,22 +94,26 @@ def test_return_none():
     assert ret is None
 
 
-def test_tojson():
-    js = pw.line(range(3)).to_json()
-    # print(js)
-    # assert set(js.keys()) == set(['data', 'layout'])
-    expected = {'layout': {},
-                'data': [{'opacity': None,
-                          'name': None,
-                          'mode': 'lines+markers',
-                          'marker': dict(size=6),
-                          'text': "",
-                          'y': [0, 1, 2],
-                          'x': [0, 1, 2],
-                          'line': {},
-                          'yaxis': 'y1',
-                          'type': 'scatter',
-                          'fill': None}]}
+def test_dict():
+    js = pw.line(range(3)).dict
+    expected = {
+        'layout': {},
+        'data': [
+            {
+                'opacity': None,
+                'name': None,
+                'mode': 'lines+markers',
+                'marker': dict(size=6),
+                'text': "",
+                'y': [0, 1, 2],
+                'x': [0, 1, 2],
+                'line': {},
+                'yaxis': 'y1',
+                'type': 'scatter',
+                'fill': None,
+            }
+        ],
+    }
     compare_figs(js, expected)
 
 
@@ -70,7 +121,7 @@ def test_one():
     x = np.arange(3)
 
     bars = pw.bar(x=x, y=[20, 14, 23], label='new york')
-    bars2 = pw.bar(x=x, y=[12, 18, 29]) #, label='la')
+    bars2 = pw.bar(x=x, y=[12, 18, 29])  # , label='la')
     line = pw.line(x=x, y=[3, 8, 9], label='hello', color='red', dash='dashdot', width=5)
     plot = bars + bars2 + line
     # print(bars.data)
@@ -79,47 +130,67 @@ def test_one():
     plot.stack()
     plot.show(auto_open=False)
 
-    expect = {'layout': {'barmode': 'stack', 'xaxis': {'title': 'x axis'},
-                         'yaxis1': {'title': 'y label'}},
-              'data': [{'y': np.array([20, 14, 23]),
-                        'x': np.array([0, 1, 2]),
-                        'opacity': None,
-                        'type': 'bar',
-                        'yaxis': 'y1',
-                        'name': 'new york'},
-                       {'y': np.array([12, 18, 29]),
-                        'x': np.array([0, 1, 2]), 'type': 'bar',
-                        'opacity': None,
-                        'yaxis': 'y1',
-                        'name': None},
-                       {'y': np.array([3, 8, 9]),
-                        'x': np.array([0, 1, 2]),
-                        'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
-                        'type': 'scatter',
-                        'marker': dict(size=6),
-                        'fill': None,
-                        'yaxis': 'y1',
-                        'text': "",
-                        'mode': 'lines+markers',
-                        'opacity': None,
-                        'name': 'hello'}]}
+    expect = {
+        'layout': {
+            'barmode': 'stack',
+            'xaxis': {'title': 'x axis'},
+            'yaxis1': {'title': 'y label'},
+        },
+        'data': [
+            {
+                'y': np.array([20, 14, 23]),
+                'x': np.array([0, 1, 2]),
+                'opacity': None,
+                'type': 'bar',
+                'yaxis': 'y1',
+                'name': 'new york',
+            },
+            {
+                'y': np.array([12, 18, 29]),
+                'x': np.array([0, 1, 2]),
+                'type': 'bar',
+                'opacity': None,
+                'yaxis': 'y1',
+                'name': None,
+            },
+            {
+                'y': np.array([3, 8, 9]),
+                'x': np.array([0, 1, 2]),
+                'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
+                'type': 'scatter',
+                'marker': dict(size=6),
+                'fill': None,
+                'yaxis': 'y1',
+                'text': "",
+                'mode': 'lines+markers',
+                'opacity': None,
+                'name': 'hello',
+            },
+        ],
+    }
 
     compare_figs(plot.figure_, expect)
 
 
 def test_two():
-    expect = {'layout': {'xaxis': {'title': 'x axis'}, 'yaxis1': {'title': 'y label'}},
-              'data': [{'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
-                        'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
-                        'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
-                        'marker': dict(size=6),
-                        'type': 'scatter',
-                        'fill': None,
-                        'text': "",
-                        'yaxis': 'y1',
-                        'mode': 'lines+markers',
-                        'opacity': None,
-                        'name': 'hello'}]}
+    expect = {
+        'layout': {'xaxis': {'title': 'x axis'}, 'yaxis1': {'title': 'y label'}},
+        'data': [
+            {
+                'y': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
+                'x': np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
+                'line': {'color': 'red', 'width': 5, 'dash': 'dashdot'},
+                'marker': dict(size=6),
+                'type': 'scatter',
+                'fill': None,
+                'text': "",
+                'yaxis': 'y1',
+                'mode': 'lines+markers',
+                'opacity': None,
+                'name': 'hello',
+            }
+        ],
+    }
 
     x = np.arange(10)
 
@@ -136,6 +207,7 @@ def test_two():
     compare_figs(line0.figure_, line1.figure_)
     compare_figs(line0.figure_, expect)
 
+
 def test_dataframe_lines():
     columns = list('abc')
     x = np.arange(10)
@@ -149,6 +221,7 @@ def test_dataframe_lines():
     p2.show(auto_open=False)
 
     compare_figs(p1.figure_, p2.figure_)
+
 
 def test_dataframe_bar():
     columns = list('abc')

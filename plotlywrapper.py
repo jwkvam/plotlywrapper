@@ -10,12 +10,13 @@ from builtins import zip
 
 import plotly.offline as py
 import plotly.graph_objs as go
+from plotly.basedatatypes import BaseFigure
 
 import numpy as np
 import pandas as pd
 
 
-__version__ = '0.0.30'
+__version__ = '0.1.0-dev'
 
 
 def _recursive_dict(*args):
@@ -47,6 +48,7 @@ def _detect_notebook():
     kernel = get_ipython()
     try:
         from spyder.utils.ipython.spyder_kernel import SpyderKernel
+
         if isinstance(kernel.kernel, SpyderKernel):
             return False
     except (ImportError, AttributeError):
@@ -79,21 +81,22 @@ def _try_pydatetime(x):
     return x
 
 
-class Chart(object):
+class Chart(BaseFigure):
     """
     Plotly chart base class, usually this object will get created
     by from a function.
     """
 
     def __init__(self, data=None, layout=None, repr_plot=True):
+        super().__init__(data=data, layout_plotly=layout)
         self.repr_plot = repr_plot
-        self.data = data
-        if data is None:
-            self.data = []
-        self.layout = layout
-        if layout is None:
-            layout = {}
-        self.layout = _recursive_dict(layout)
+        # self.data = data
+        # if data is None:
+        #     self.data = []
+        # self.layout = layout
+        # if layout is None:
+        #     layout = {}
+        # self.layout = _recursive_dict(layout)
         self.figure_ = None
 
     def __add__(self, other):
@@ -473,29 +476,20 @@ class Chart(object):
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(self.figure_, show_link=show_link, **kargs)
 
-    def save(self, filename=None, show_link=True, auto_open=False,
-             output='file', plotlyjs=True):
+    def save(self, filename=None, show_link=True, auto_open=False, output='file', plotlyjs=True):
         if filename is None:
             filename = NamedTemporaryFile(prefix='plotly', suffix='.html', delete=False).name
         self.figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         # NOTE: this doesn't work for output 'div'
-        py.plot(self.figure_, show_link=show_link, filename=filename, auto_open=auto_open,
-                output_type=output, include_plotlyjs=plotlyjs)
+        py.plot(
+            self.figure_,
+            show_link=show_link,
+            filename=filename,
+            auto_open=auto_open,
+            output_type=output,
+            include_plotlyjs=plotlyjs,
+        )
         return filename
-
-    def to_json(self):
-        """ Deprecated.
-        """
-        listdata = []
-        for data in self.data:
-            td = {}
-            for k, v in data.items():
-                try:
-                    td[k] = v.tolist()
-                except (AttributeError, TypeError):
-                    td[k] = v
-            listdata.append(td)
-        return dict(data=listdata, layout=self.layout)
 
     @property
     def dict(self):
@@ -517,9 +511,7 @@ def spark_shape(points, shapes, fill=None, color='blue', width=5, yindex=0, heig
 
     """
     assert len(points) == len(shapes) + 1
-    data = [{'marker': {'color': 'white'},
-             'x': [points[0], points[-1]],
-             'y': [yindex, yindex]}]
+    data = [{'marker': {'color': 'white'}, 'x': [points[0], points[-1]], 'y': [yindex, yindex]}]
 
     if fill is None:
         fill = [False] * len(shapes)
@@ -536,13 +528,17 @@ def spark_shape(points, shapes, fill=None, color='blue', width=5, yindex=0, heig
         else:
             fillcolor = 'white'
         lays.append(
-            dict(type=shape,
-                 x0=points[i], x1=points[i+1],
-                 y0=yindex - height, y1=yindex + height,
-                 xref='x', yref='y',
-                 fillcolor=fillcolor,
-                 line=dict(color=color,
-                           width=width))
+            dict(
+                type=shape,
+                x0=points[i],
+                x1=points[i + 1],
+                y0=yindex - height,
+                y1=yindex + height,
+                xref='x',
+                yref='y',
+                fillcolor=fillcolor,
+                line=dict(color=color, width=width),
+            )
         )
 
     layout = dict(shapes=lays)
@@ -573,11 +569,9 @@ def vertical(x, ymin=0, ymax=1, color=None, width=None, dash=None, opacity=None)
     if dash:
         lineattr['dash'] = dash
 
-    layout = dict(shapes=[dict(type='line',
-                               x0=x, x1=x,
-                               y0=ymin, y1=ymax,
-                               opacity=opacity,
-                               line=lineattr)])
+    layout = dict(
+        shapes=[dict(type='line', x0=x, x1=x, y0=ymin, y1=ymax, opacity=opacity, line=lineattr)]
+    )
     return Chart(layout=layout)
 
 
@@ -604,17 +598,26 @@ def horizontal(y, xmin=0, xmax=1, color=None, width=None, dash=None, opacity=Non
     if dash:
         lineattr['dash'] = dash
 
-    layout = dict(shapes=[dict(type='line',
-                               x0=xmin, x1=xmax,
-                               y0=y, y1=y,
-                               opacity=opacity,
-                               line=lineattr)])
+    layout = dict(
+        shapes=[dict(type='line', x0=xmin, x1=xmax, y0=y, y1=y, opacity=opacity, line=lineattr)]
+    )
     return Chart(layout=layout)
 
 
-def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-         mode='lines+markers', yaxis=1, fill=None, text="",
-         markersize=6):
+def line(
+    x=None,
+    y=None,
+    label=None,
+    color=None,
+    width=None,
+    dash=None,
+    opacity=None,
+    mode='lines+markers',
+    yaxis=1,
+    fill=None,
+    text="",
+    markersize=6,
+):
     """Draws connected dots.
 
     Parameters
@@ -653,20 +656,45 @@ def line(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter(x=x, y=yy, name=ll, line=lineattr, mode=mode, text=text,
-                           fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))
-                for ll, yy in zip(label, y.T)]
+        data = [
+            go.Scatter(
+                x=x,
+                y=yy,
+                name=ll,
+                line=lineattr,
+                mode=mode,
+                text=text,
+                fill=fill,
+                opacity=opacity,
+                yaxis=yn,
+                marker=dict(size=markersize),
+            )
+            for ll, yy in zip(label, y.T)
+        ]
     else:
-        data = [go.Scatter(x=x, y=y, name=label, line=lineattr, mode=mode, text=text,
-                           fill=fill, opacity=opacity, yaxis=yn, marker=dict(size=markersize))]
+        data = [
+            go.Scatter(
+                x=x,
+                y=y,
+                name=label,
+                line=lineattr,
+                mode=mode,
+                text=text,
+                fill=fill,
+                opacity=opacity,
+                yaxis=yn,
+                marker=dict(size=markersize),
+            )
+        ]
     if yaxis == 1:
         return Chart(data=data)
 
     return Chart(data=data, layout={'yaxis' + str(yaxis): dict(overlaying='y')})
 
 
-def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
-           mode='lines+markers'):
+def line3d(
+    x, y, z, label=None, color=None, width=None, dash=None, opacity=None, mode='lines+markers'
+):
     x = np.atleast_1d(x)
     y = np.atleast_1d(y)
     z = np.atleast_1d(z)
@@ -685,17 +713,16 @@ def line3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter3d(x=xx, y=yy, z=zz, name=ll, line=lineattr, mode=mode,
-                             opacity=opacity)
-                for ll, xx, yy, zz in zip(label, x.T, y.T, z.T)]
+        data = [
+            go.Scatter3d(x=xx, y=yy, z=zz, name=ll, line=lineattr, mode=mode, opacity=opacity)
+            for ll, xx, yy, zz in zip(label, x.T, y.T, z.T)
+        ]
     else:
-        data = [go.Scatter3d(x=x, y=y, z=z, name=label, line=lineattr, mode=mode,
-                             opacity=opacity)]
+        data = [go.Scatter3d(x=x, y=y, z=z, name=label, line=lineattr, mode=mode, opacity=opacity)]
     return Chart(data=data)
 
 
-def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None,
-              mode='markers'):
+def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=None, mode='markers'):
     """3D Scatter Plot
 
     Parameters
@@ -733,17 +760,29 @@ def scatter3d(x, y, z, label=None, color=None, width=None, dash=None, opacity=No
                 label = _labels()
             else:
                 label = _labels(label)
-        data = [go.Scatter3d(x=xx, y=yy, z=zz, name=ll, line=lineattr, mode=mode,
-                             opacity=opacity)
-                for ll, xx, yy, zz in zip(label, x.T, y.T, z.T)]
+        data = [
+            go.Scatter3d(x=xx, y=yy, z=zz, name=ll, line=lineattr, mode=mode, opacity=opacity)
+            for ll, xx, yy, zz in zip(label, x.T, y.T, z.T)
+        ]
     else:
-        data = [go.Scatter3d(x=x, y=y, z=z, name=label, line=lineattr, mode=mode,
-                             opacity=opacity)]
+        data = [go.Scatter3d(x=x, y=y, z=z, name=label, line=lineattr, mode=mode, opacity=opacity)]
     return Chart(data=data)
 
 
-def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-            markersize=6, yaxis=1, fill=None, text="", mode='markers'):
+def scatter(
+    x=None,
+    y=None,
+    label=None,
+    color=None,
+    width=None,
+    dash=None,
+    opacity=None,
+    markersize=6,
+    yaxis=1,
+    fill=None,
+    text="",
+    mode='markers',
+):
     """Draws dots.
 
     Parameters
@@ -757,8 +796,20 @@ def scatter(x=None, y=None, label=None, color=None, width=None, dash=None, opaci
     Chart
 
     """
-    return line(x=x, y=y, label=label, color=color, width=width, dash=dash, opacity=opacity,
-                mode=mode, yaxis=yaxis, fill=fill, text=text, markersize=markersize)
+    return line(
+        x=x,
+        y=y,
+        label=label,
+        color=color,
+        width=width,
+        dash=dash,
+        opacity=opacity,
+        mode=mode,
+        yaxis=yaxis,
+        fill=fill,
+        text=text,
+        markersize=markersize,
+    )
 
 
 def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
@@ -801,8 +852,7 @@ def bar(x=None, y=None, label=None, mode='group', yaxis=1, opacity=None):
     if yaxis == 1:
         return Chart(data=data, layout={'barmode': mode})
 
-    return Chart(data=data, layout={'barmode': mode,
-                                    'yaxis' + str(yaxis): dict(overlaying='y')})
+    return Chart(data=data, layout={'barmode': mode, 'yaxis' + str(yaxis): dict(overlaying='y')})
 
 
 def heatmap(z, x=None, y=None, colorscale='Viridis'):
@@ -822,17 +872,21 @@ def heatmap(z, x=None, y=None, colorscale='Viridis'):
 
     """
     z = np.atleast_1d(z)
-    data = [go.Heatmap(
-        z=z,
-        x=x,
-        y=y,
-        colorscale=colorscale
-    )]
+    data = [go.Heatmap(z=z, x=x, y=y, colorscale=colorscale)]
     return Chart(data=data)
 
 
-def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opacity=None,
-              mode='lines+markers', **kargs):
+def fill_zero(
+    x=None,
+    y=None,
+    label=None,
+    color=None,
+    width=None,
+    dash=None,
+    opacity=None,
+    mode='lines+markers',
+    **kargs
+):
     """Fill to zero.
 
     Parameters
@@ -846,12 +900,32 @@ def fill_zero(x=None, y=None, label=None, color=None, width=None, dash=None, opa
     Chart
 
     """
-    return line(x=x, y=y, label=label, color=color, width=width, dash=dash,
-                opacity=opacity, mode=mode, fill='tozeroy', **kargs)
+    return line(
+        x=x,
+        y=y,
+        label=label,
+        color=color,
+        width=width,
+        dash=dash,
+        opacity=opacity,
+        mode=mode,
+        fill='tozeroy',
+        **kargs
+    )
 
 
-def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=None, dash=None,
-                 opacity=None, mode='lines+markers', **kargs):
+def fill_between(
+    x=None,
+    ylow=None,
+    yhigh=None,
+    label=None,
+    color=None,
+    width=None,
+    dash=None,
+    opacity=None,
+    mode='lines+markers',
+    **kargs
+):
     """Fill between `ylow` and `yhigh`
 
     Parameters
@@ -865,10 +939,30 @@ def fill_between(x=None, ylow=None, yhigh=None, label=None, color=None, width=No
     Chart
 
     """
-    plot = line(x=x, y=ylow, label=label, color=color, width=width, dash=dash,
-                opacity=opacity, mode=mode, fill=None, **kargs)
-    plot += line(x=x, y=yhigh, label=label, color=color, width=width, dash=dash,
-                 opacity=opacity, mode=mode, fill='tonexty', **kargs)
+    plot = line(
+        x=x,
+        y=ylow,
+        label=label,
+        color=color,
+        width=width,
+        dash=dash,
+        opacity=opacity,
+        mode=mode,
+        fill=None,
+        **kargs
+    )
+    plot += line(
+        x=x,
+        y=yhigh,
+        label=label,
+        color=color,
+        width=width,
+        dash=dash,
+        opacity=opacity,
+        mode=mode,
+        fill='tonexty',
+        **kargs
+    )
     return plot
 
 
@@ -888,21 +982,31 @@ def rug(x, label=None, opacity=None):
     """
     x = _try_pydatetime(x)
     x = np.atleast_1d(x)
-    data = [go.Scatter(x=x, y=np.ones_like(x), name=label,
-                       opacity=opacity,
-                       mode='markers',
-                       marker=dict(symbol='line-ns-open'))]
-    layout = dict(barmode='overlay',
-                  hovermode='closest',
-                  legend=dict(traceorder='reversed'),
-                  xaxis1=dict(zeroline=False),
-                  yaxis1=dict(domain=[0.85, 1],
-                              showline=False,
-                              showgrid=False,
-                              zeroline=False,
-                              anchor='free',
-                              position=0.0,
-                              showticklabels=False))
+    data = [
+        go.Scatter(
+            x=x,
+            y=np.ones_like(x),
+            name=label,
+            opacity=opacity,
+            mode='markers',
+            marker=dict(symbol='line-ns-open'),
+        )
+    ]
+    layout = dict(
+        barmode='overlay',
+        hovermode='closest',
+        legend=dict(traceorder='reversed'),
+        xaxis1=dict(zeroline=False),
+        yaxis1=dict(
+            domain=[0.85, 1],
+            showline=False,
+            showgrid=False,
+            zeroline=False,
+            anchor='free',
+            position=0.0,
+            showticklabels=False,
+        ),
+    )
     return Chart(data=data, layout=layout)
 
 
@@ -983,7 +1087,7 @@ def hist2d(x, y, label=None, opacity=None):
     return Chart(data=data)
 
 
-class PandasPlotting(object):
+class PandasPlotting:
     """
     These plotting tools can be accessed through dataframe instance
     accessor `.plotly`.
@@ -1005,16 +1109,35 @@ class PandasPlotting(object):
         elif isinstance(data, pd.Series):
             self._label = data.name
 
-    def line(self, label=None, color=None, width=None, dash=None,
-             opacity=None, mode='lines+markers', fill=None, **kargs):
+    def line(
+        self,
+        label=None,
+        color=None,
+        width=None,
+        dash=None,
+        opacity=None,
+        mode='lines+markers',
+        fill=None,
+        **kargs
+    ):
         if label is None:
             label = self._label
-        return line(x=self._data.index, y=self._data.values, label=label,
-                    color=color, width=width, dash=dash, opacity=opacity, mode=mode,
-                    fill=fill, **kargs)
+        return line(
+            x=self._data.index,
+            y=self._data.values,
+            label=label,
+            color=color,
+            width=width,
+            dash=dash,
+            opacity=opacity,
+            mode=mode,
+            fill=fill,
+            **kargs
+        )
 
-    def scatter(self, label=None, color=None, width=None, dash=None,
-                opacity=None, mode='markers', **kargs):
+    def scatter(
+        self, label=None, color=None, width=None, dash=None, opacity=None, mode='markers', **kargs
+    ):
         """Creates a bar chart.
 
         Parameters
@@ -1030,8 +1153,17 @@ class PandasPlotting(object):
         """
         if label is None:
             label = self._label
-        return scatter(x=self._data.index, y=self._data.values, label=label,
-                       color=color, width=width, dash=dash, opacity=opacity, mode=mode, **kargs)
+        return scatter(
+            x=self._data.index,
+            y=self._data.values,
+            label=label,
+            color=color,
+            width=width,
+            dash=dash,
+            opacity=opacity,
+            mode=mode,
+            **kargs
+        )
 
     def bar(self, label=None, mode='group', opacity=None, **kargs):
         """Creates a bar chart.
@@ -1050,8 +1182,14 @@ class PandasPlotting(object):
         """
         if label is None:
             label = self._label
-        return bar(x=self._data.index, y=self._data.values, label=label,
-                   mode=mode, opacity=opacity, **kargs)
+        return bar(
+            x=self._data.index,
+            y=self._data.values,
+            label=label,
+            mode=mode,
+            opacity=opacity,
+            **kargs
+        )
 
     def stack(self, mode='lines', label=None, **kargs):
         """Creates a stacked area plot.
@@ -1074,8 +1212,15 @@ class PandasPlotting(object):
         cum = self._data.cumsum(axis=1)
         chart = Chart()
         for lab, (_, ser), (_, orig) in zip(label, cum.iteritems(), self._data.iteritems()):
-            chart += line(x=ser.index, y=ser.values, label=lab,
-                          fill='tonexty', mode=mode, text=orig.values, **kargs)
+            chart += line(
+                x=ser.index,
+                y=ser.values,
+                label=lab,
+                fill='tonexty',
+                mode=mode,
+                text=orig.values,
+                **kargs
+            )
         return chart
 
     def sparklines(self, label=None, mode='lines', percent=90, epsilon=1e-3):
@@ -1098,7 +1243,7 @@ class PandasPlotting(object):
         div = self._data.max(axis=0) - self._data.min(axis=0) + epsilon
         center = div / 2. + self._data.min(axis=0)
         normed = (self._data - center) / div
-        normed *= (percent / 100.)
+        normed *= percent / 100.
         offset = np.arange(1, self._data.shape[1] + 1)
         normed += offset
 
@@ -1110,10 +1255,11 @@ class PandasPlotting(object):
 
 
 # pylint: disable=too-few-public-methods
-class _AccessorProperty(object):
+class _AccessorProperty:
     """Descriptor for implementing accessor properties.
     Borrowed from pandas.
     """
+
     def __init__(self, accessor_cls, construct_accessor):
         self.accessor_cls = accessor_cls
         self.construct_accessor = construct_accessor
