@@ -90,6 +90,7 @@ class Chart(go.Figure):
 
     def __add__(self, other):
         """Add another chart or plot type to this chart."""
+        # pylint: disable=attribute-defined-outside-init
         if isinstance(other, Chart):
             self.add_traces(other.data)
             self.layout = _merge_layout(self.layout, other.layout)
@@ -115,7 +116,7 @@ class Chart(go.Figure):
         self.layout.width = value
 
     @property
-    def height(self, value):
+    def height(self):
         """Height of the chart in pixels."""
         return self.layout.height
 
@@ -416,7 +417,13 @@ class Chart(go.Figure):
             self.show(filename=None, auto_open=False)
         return super().__repr__()
 
-    def show(self, filename=None, show_link=True, auto_open=True, detect_notebook=True):
+    def show(
+        self,
+        filename: Optional[str] = None,
+        show_link: bool = True,
+        auto_open: bool = True,
+        detect_notebook: bool = True,
+    ) -> None:
         """Display the chart.
 
         Parameters

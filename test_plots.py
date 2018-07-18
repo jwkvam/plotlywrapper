@@ -1,9 +1,9 @@
-from typing import Any
+"""Tests for Plotlywrapper."""
 import json
+from datetime import datetime, time, date
 
 import numpy as np
 from numpy import random as rng
-from datetime import datetime, time, date
 import pandas as pd
 import pytest
 
@@ -12,10 +12,8 @@ import plotlywrapper as pw
 
 def json_conversion(obj):
     """Encode additional objects to JSON."""
-
     if isinstance(obj, (np.ndarray, np.generic)):
         return obj.tolist()
-
     if isinstance(obj, pd.DatetimeIndex):
         return [x.isoformat() for x in obj.to_pydatetime()]
     if isinstance(obj, pd.Index):
@@ -25,13 +23,13 @@ def json_conversion(obj):
             return [x.isoformat() for x in obj.dt.to_pydatetime()]
         except AttributeError:
             return obj.tolist()
-
     if isinstance(obj, (datetime, time, date)):
         return obj.isoformat()
     raise TypeError('Not sure how to serialize {} of type {}'.format(obj, type(obj)))
 
 
 def compare_figs(d1, d2):
+    """Compare charts."""
     d1 = json.loads(json.dumps(d1, default=json_conversion))
     d2 = json.loads(json.dumps(d2, default=json_conversion))
     _compare_figs(d1, d2)
@@ -62,19 +60,15 @@ def _compare_figs(d1, d2):
 
 
 def test_no_args():
+    """Test no args raises an error."""
     with pytest.raises(AssertionError):
         pw.line()
     with pytest.raises(AssertionError):
         pw.bar()
 
 
-def test_return_none():
-    x = np.arange(3)
-    ret = pw.line(x).show(auto_open=False)
-    assert ret is None
-
-
 def test_dict():
+    """Test dict accessor works."""
     js = pw.line(range(3)).dict
     expected = {
         'layout': {},
@@ -94,6 +88,7 @@ def test_dict():
 
 
 def test_one():
+    """First charting test."""
     x = np.arange(3)
 
     bars = pw.bar(x=x, y=[20, 14, 23], label='new york')
@@ -101,7 +96,7 @@ def test_one():
     line = pw.line(x=x, y=[3, 8, 9], label='hello', color='red', dash='dashdot', width=5)
     plot = bars + bars2 + line
     # print(bars.data)
-    plot.xlabel('x axis')
+    plot.xlabel = 'x axis'
     plot.ylabel('y label')
     plot.stack()
     plot.show(auto_open=False)
@@ -135,6 +130,7 @@ def test_one():
 
 
 def test_two():
+    """Second charting test."""
     expect = {
         'layout': {'xaxis': {'title': 'x axis'}, 'yaxis': {'title': 'y label'}},
         'data': [
@@ -155,12 +151,12 @@ def test_two():
     x = np.arange(10)
 
     line0 = pw.line(y=x, label='hello', color='red', dash='dashdot', width=5)
-    line0.xlabel('x axis')
+    line0.xlabel = 'x axis'
     line0.ylabel('y label')
     line0.show(auto_open=False)
 
     line1 = pw.line(x, label='hello', color='red', dash='dashdot', width=5)
-    line1.xlabel('x axis')
+    line1.xlabel = 'x axis'
     line1.ylabel('y label')
     line1.show(auto_open=False)
 
@@ -169,6 +165,7 @@ def test_two():
 
 
 def test_dataframe_lines():
+    """Test dataframe lines chart."""
     columns = list('abc')
     x = np.arange(10)
     y = rng.randn(10, 3)
@@ -184,6 +181,7 @@ def test_dataframe_lines():
 
 
 def test_dataframe_bar():
+    """Test dataframe bar chart."""
     columns = list('abc')
     x = np.arange(10)
     y = rng.randn(10, 3)
