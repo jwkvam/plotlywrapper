@@ -170,23 +170,14 @@ class Chart(go.Figure):
     def xlabel(self, label):
         self.layout.xaxis.title = label
 
-    def ylabel(self, label, index=1):
-        """Set the y-axis title.
+    @property
+    def ylabel(self):
+        """Left Yaxis Label."""
+        return self.layout.yaxis.title
 
-        Parameters
-        ----------
-        value : str
-            Label for the y-axis
-        index : int
-            Y-axis index
-
-        Returns
-        -------
-        Chart
-
-        """
-        self.layout['yaxis' + str(index)]['title'] = label
-        return self
+    @ylabel.setter
+    def ylabel(self, label):
+        self.layout.yaxis.title = label
 
     @property
     def zlabel(self):
