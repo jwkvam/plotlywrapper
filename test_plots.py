@@ -97,7 +97,7 @@ def test_one():
     plot = bars + bars2 + line
     # print(bars.data)
     plot.xlabel = 'x axis'
-    plot.ylabel('y label')
+    plot.ylabel = 'y label'
     plot.stack()
     plot.show(auto_open=False)
 
@@ -152,12 +152,12 @@ def test_two():
 
     line0 = pw.line(y=x, label='hello', color='red', dash='dashdot', width=5)
     line0.xlabel = 'x axis'
-    line0.ylabel('y label')
+    line0.ylabel = 'y label'
     line0.show(auto_open=False)
 
     line1 = pw.line(x, label='hello', color='red', dash='dashdot', width=5)
     line1.xlabel = 'x axis'
-    line1.ylabel('y label')
+    line1.ylabel = 'y label'
     line1.show(auto_open=False)
 
     compare_figs(line0.dict, line1.dict)
