@@ -1,7 +1,10 @@
 all: test
 
 test:
-	py.test --cov=./ --pylint --pylint-rcfile=pylintrc --pylint-error-types=WCREF --ignore=doc
+	py.test --cov=./ --docstyle --codestyle --pylint --pylint-rcfile=pylintrc --pylint-error-types=WCREF --ignore=doc
+
+black_check:
+	black -S -l 100 --check *.py 
 
 lint:
 	py.test --pylint -m pylint --pylint-rcfile=pylintrc --pylint-error-types=WCREF --ignore=doc
@@ -11,6 +14,9 @@ loop:
 
 debug:
 	py.test --pylint --pylint-rcfile=pylintrc --pylint-error-types=WCREF -s --pdb --ignore=doc
+
+black:
+	black -l 100 -S *.py
 
 upload:
 	flit wheel --upload
