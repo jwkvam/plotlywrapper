@@ -4,9 +4,6 @@ Plotlywrapper: pythonic plotly
 |Build Status| |rtd.io| |PyPI version| |PyPI| |codecov.io| |Code Health|
 |Scrutinizer Code Quality|
 
-**News** Tests are failing due to release of plotly v3.
-Need to reevaluate need of library, in the meantime it still works with plotly v2.
-
 Plotlywrapper wraps `plotly <https://plot.ly/python/>`__ to make easy
 plots easy to make. Check out the
 `docs <http://plotlywrapper.readthedocs.io/en/latest/>`__!
