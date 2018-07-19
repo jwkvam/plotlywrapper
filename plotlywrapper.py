@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.1.0-dev'
+__version__ = '0.1.0'
 
 
 def _labels(base='trace') -> Generator[str, None, None]:
