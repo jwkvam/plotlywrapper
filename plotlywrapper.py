@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.1.0'
+__version__ = '0.1.1-dev'
 
 
 def _labels(base='trace') -> Generator[str, None, None]:
@@ -642,7 +642,7 @@ def line(
                 fill=fill,
                 opacity=opacity,
                 yaxis=yn,
-                marker=dict(size=markersize),
+                marker=dict(size=markersize, opacity=opacity),
             )
             for ll, yy in zip(label, y.T)
         ]
@@ -658,7 +658,7 @@ def line(
                 fill=fill,
                 opacity=opacity,
                 yaxis=yn,
-                marker=dict(size=markersize),
+                marker=dict(size=markersize, opacity=opacity),
             )
         ]
     if yaxis == 1:
@@ -1219,9 +1219,9 @@ class PandasPlotting:
             label = self._label
 
         div = self._data.max(axis=0) - self._data.min(axis=0) + epsilon
-        center = div / 2. + self._data.min(axis=0)
+        center = div / 2.0 + self._data.min(axis=0)
         normed = (self._data - center) / div
-        normed *= percent / 100.
+        normed *= percent / 100.0
         offset = np.arange(1, self._data.shape[1] + 1)
         normed += offset
 
