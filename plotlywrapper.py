@@ -83,7 +83,7 @@ class Chart(go.FigureWidget):
     Usually this object will get created by from a function.
     """
 
-    def __init__(self, data=None, layout=None, repr_plot=True):
+    def __init__(self, data=None, layout=None):
         """Create a chart."""
         super().__init__(data=data, layout=layout)
 
