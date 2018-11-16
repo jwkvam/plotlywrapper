@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.1.1-dev'
+__version__ = '0.2.0-dev'
 
 
 def _labels(base='trace') -> Generator[str, None, None]:
@@ -77,7 +77,7 @@ def _try_pydatetime(x):
     return x
 
 
-class Chart(go.Figure):
+class Chart(go.FigureWidget):
     """Plotly chart base class.
 
     Usually this object will get created by from a function.
@@ -86,7 +86,6 @@ class Chart(go.Figure):
     def __init__(self, data=None, layout=None, repr_plot=True):
         """Create a chart."""
         super().__init__(data=data, layout=layout)
-        self._repr_plot = repr_plot
 
     def __add__(self, other):
         """Add another chart or plot type to this chart."""
@@ -401,12 +400,6 @@ class Chart(go.Figure):
     @title.setter
     def title(self, string: str) -> None:
         self.layout.title = string
-
-    def __repr__(self):
-        """Show the chart."""
-        if self._repr_plot:
-            self.show(filename=None, auto_open=False)
-        return super().__repr__()
 
     def show(
         self,
