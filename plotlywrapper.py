@@ -187,6 +187,19 @@ class Chart(go.FigureWidget):
     def zlabel(self, label):
         self.layout.zaxis.title = label
 
+    @property
+    def hovermode(self):
+        """Set hovermode: 'x', 'y', 'closest', False
+
+        https://plot.ly/python/reference/#layout-hovermode
+
+        """
+        return self.layout.hovermode
+
+    @hovermode.setter
+    def hovermode(self, value):
+        self.layout.hovermode = value
+
     def xtickangle(self, angle):
         """Set the angle of the x-axis tick labels.
 
@@ -433,7 +446,6 @@ class Chart(go.FigureWidget):
             kargs['filename'] = filename
             kargs['auto_open'] = auto_open
 
-        # self._figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(self, show_link=show_link, **kargs)
 
     def save(
