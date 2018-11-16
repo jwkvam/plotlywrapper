@@ -15,6 +15,12 @@ import pandas as pd
 __version__ = '0.2.0-dev'
 
 
+try:
+    Figure = go.FigureWidget
+except AttributeError:
+    Figure = go.Figure
+
+
 def _labels(base='trace') -> Generator[str, None, None]:
     i = 0
     while True:
@@ -77,7 +83,7 @@ def _try_pydatetime(x):
     return x
 
 
-class Chart(go.FigureWidget):
+class Chart(Figure):
     """Plotly chart base class.
 
     Usually this object will get created by from a function.
