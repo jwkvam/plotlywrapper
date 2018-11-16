@@ -187,18 +187,21 @@ class Chart(go.FigureWidget):
     def zlabel(self, label):
         self.layout.zaxis.title = label
 
-    @property
-    def hovermode(self):
-        """Set hovermode: 'x', 'y', 'closest', False
+    def closest(self):
+        """Set hovermode to closest.
 
         https://plot.ly/python/reference/#layout-hovermode
 
         """
-        return self.layout.hovermode
+        self.layout.hovermode = 'closest'
 
-    @hovermode.setter
-    def hovermode(self, value):
-        self.layout.hovermode = value
+    def closest(self):
+        """Set hovermode to compare.
+
+        https://plot.ly/python/reference/#layout-hovermode
+
+        """
+        self.layout.hovermode = False
 
     def xtickangle(self, angle):
         """Set the angle of the x-axis tick labels.
