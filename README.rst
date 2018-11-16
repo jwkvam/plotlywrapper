@@ -1,8 +1,7 @@
 Plotlywrapper: pythonic plotly
 ==============================
 
-|Build Status| |rtd.io| |PyPI version| |PyPI| |codecov.io| |Code Health|
-|Scrutinizer Code Quality|
+|Build Status| |rtd.io| |PyPI version| |PyPI| |codecov.io|
 
 Plotlywrapper wraps `plotly <https://plot.ly/python/>`__ to make easy
 plots easy to make. Check out the
