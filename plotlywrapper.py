@@ -111,24 +111,6 @@ class Chart(Figure):
         """Add another chart or plot type to this chart."""
         return self.__add__(other)
 
-    @property
-    def width(self):
-        """Width of the chart in pixels."""
-        return self.layout.width
-
-    @width.setter
-    def width(self, value):
-        self.layout.width = value
-
-    @property
-    def height(self):
-        """Height of the chart in pixels."""
-        return self.layout.height
-
-    @height.setter
-    def height(self, value):
-        self.layout.height = value
-
     def group(self):
         """Set bar graph display mode to "grouped".
 
@@ -233,7 +215,7 @@ class Chart(Figure):
         Chart
 
         """
-        self.layout['xaxis']['tickangle'] = angle
+        self.layout.xaxis.tickangle = angle
         return self
 
     def ytickangle(self, angle, index=1):
@@ -424,15 +406,6 @@ class Chart(Figure):
 
         """
         self.layout['yaxis' + str(index)]['side'] = 'right'
-
-    @property
-    def title(self) -> str:
-        """Title of the chart."""
-        return self.layout.title
-
-    @title.setter
-    def title(self, string: str) -> None:
-        self.layout.title = string
 
     def show(
         self,
