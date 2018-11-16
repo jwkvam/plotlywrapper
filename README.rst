@@ -9,6 +9,7 @@ plots easy to make. Check out the
 
 .. figure:: https://cloud.githubusercontent.com/assets/86304/17239866/2c4c30b2-551c-11e6-9bb8-7ed467ebdacb.png
    :width: 826px
+   :target: https://en.wikipedia.org/wiki/Brownian_bridge/
 
    2D `Brownian Bridge <https://en.wikipedia.org/wiki/Brownian_bridge/>`__
 
