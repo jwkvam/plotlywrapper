@@ -5,7 +5,7 @@ numpy
 pandas
 plotly
 pylint
-pytest
+pytest<4.0
 pytest-codestyle
 pytest-cov
 pytest-docstyle

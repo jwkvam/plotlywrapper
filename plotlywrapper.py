@@ -12,7 +12,13 @@ import numpy as np
 import pandas as pd
 
 
-__version__ = '0.1.1-dev'
+__version__ = '0.2.0-dev'
+
+
+try:
+    Figure = go.FigureWidget
+except AttributeError:
+    Figure = go.Figure
 
 
 def _labels(base='trace') -> Generator[str, None, None]:
@@ -77,16 +83,15 @@ def _try_pydatetime(x):
     return x
 
 
-class Chart(go.Figure):
+class Chart(Figure):
     """Plotly chart base class.
 
     Usually this object will get created by from a function.
     """
 
-    def __init__(self, data=None, layout=None, repr_plot=True):
+    def __init__(self, data=None, layout=None):
         """Create a chart."""
         super().__init__(data=data, layout=layout)
-        self._repr_plot = repr_plot
 
     def __add__(self, other):
         """Add another chart or plot type to this chart."""
@@ -105,24 +110,6 @@ class Chart(go.Figure):
     def __radd__(self, other):
         """Add another chart or plot type to this chart."""
         return self.__add__(other)
-
-    @property
-    def width(self):
-        """Width of the chart in pixels."""
-        return self.layout.width
-
-    @width.setter
-    def width(self, value):
-        self.layout.width = value
-
-    @property
-    def height(self):
-        """Height of the chart in pixels."""
-        return self.layout.height
-
-    @height.setter
-    def height(self, value):
-        self.layout.height = value
 
     def group(self):
         """Set bar graph display mode to "grouped".
@@ -188,6 +175,33 @@ class Chart(go.Figure):
     def zlabel(self, label):
         self.layout.zaxis.title = label
 
+    def closest(self):
+        """Set hovermode to closest.
+
+        https://plot.ly/python/reference/#layout-hovermode
+
+        """
+        self.layout.hovermode = 'closest'
+        return self
+
+    def xcompare(self):
+        """Set hovermode to compare along x axis.
+
+        https://plot.ly/python/reference/#layout-hovermode
+
+        """
+        self.layout.hovermode = 'x'
+        return self
+
+    def ycompare(self):
+        """Set hovermode to compare along y axis.
+
+        https://plot.ly/python/reference/#layout-hovermode
+
+        """
+        self.layout.hovermode = 'y'
+        return self
+
     def xtickangle(self, angle):
         """Set the angle of the x-axis tick labels.
 
@@ -201,7 +215,7 @@ class Chart(go.Figure):
         Chart
 
         """
-        self.layout['xaxis']['tickangle'] = angle
+        self.layout.xaxis.tickangle = angle
         return self
 
     def ytickangle(self, angle, index=1):
@@ -393,21 +407,6 @@ class Chart(go.Figure):
         """
         self.layout['yaxis' + str(index)]['side'] = 'right'
 
-    @property
-    def title(self) -> str:
-        """Title of the chart."""
-        return self.layout.title
-
-    @title.setter
-    def title(self, string: str) -> None:
-        self.layout.title = string
-
-    def __repr__(self):
-        """Show the chart."""
-        if self._repr_plot:
-            self.show(filename=None, auto_open=False)
-        return super().__repr__()
-
     def show(
         self,
         filename: Optional[str] = None,
@@ -440,7 +439,6 @@ class Chart(go.Figure):
             kargs['filename'] = filename
             kargs['auto_open'] = auto_open
 
-        # self._figure_ = go.Figure(data=self.data, layout=go.Layout(**self.layout))
         plot(self, show_link=show_link, **kargs)
 
     def save(
