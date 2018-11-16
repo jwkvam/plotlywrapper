@@ -11,3 +11,5 @@ pytest-cov
 pytest-docstyle
 pytest-mypy
 pytest-pylint
+notebook
+ipywidgets

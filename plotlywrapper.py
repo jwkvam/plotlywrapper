@@ -194,14 +194,25 @@ class Chart(go.FigureWidget):
 
         """
         self.layout.hovermode = 'closest'
+        return self
 
-    def closest(self):
-        """Set hovermode to compare.
+    def xcompare(self):
+        """Set hovermode to compare along x axis.
 
         https://plot.ly/python/reference/#layout-hovermode
 
         """
-        self.layout.hovermode = False
+        self.layout.hovermode = 'x'
+        return self
+
+    def ycompare(self):
+        """Set hovermode to compare along y axis.
+
+        https://plot.ly/python/reference/#layout-hovermode
+
+        """
+        self.layout.hovermode = 'y'
+        return self
 
     def xtickangle(self, angle):
         """Set the angle of the x-axis tick labels.
