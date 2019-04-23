@@ -3,6 +3,8 @@ Plotlywrapper: pythonic plotly
 
 |Build Status| |rtd.io| |PyPI version| |PyPI| |codecov.io|
 
+**NOTICE** you may be better off using `plotly express <https://github.com/plotly/plotly_express/>`__ depending on your needs.
+
 Plotlywrapper wraps `plotly <https://plot.ly/python/>`__ to make easy
 plots easy to make. Check out the
 `docs <http://plotlywrapper.readthedocs.io/en/latest/>`__!
